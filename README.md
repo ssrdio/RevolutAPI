@@ -1,12 +1,11 @@
-# Sandbox credentials
-API key:
-sand_your_credentials
-
 # API documentation
 https://revolutdev.github.io/business-api/
 
-# API client setup
-1. Clone RevolutLib from `[TODO: repo url here]` inside your project directory
+# Get NuGet Package
+[RevolutAPI ](https://www.nuget.org/packages/RevolutAPI/)
+
+# Source code client setup
+1. Clone RevolutLib from [GitHub](https://github.com/ssrdio/RevolutAPI) inside your project directory
 2. Add the RevolutApi project to yout solution
 3. Add a reference to the RevolutApi project
 
