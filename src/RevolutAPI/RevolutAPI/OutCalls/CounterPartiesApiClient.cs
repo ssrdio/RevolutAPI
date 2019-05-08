@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using RevolutAPI.Models.Counterparties;
+using RevolutAPI.Helpers;
 
 namespace RevolutAPI.OutCalls
 {
@@ -28,13 +29,14 @@ namespace RevolutAPI.OutCalls
             return await _apiClient.Get<GetCounterpartyResp>(endpoint);
         }
 
-        public async Task<AddCounterpartyResp> CreateCounterparty(AddCounterpartyReq req)
+        public async Task<Result<AddCounterpartyResp>> CreateCounterparty(AddCounterpartyReq req)
         {
             string endpoint = "/counterparty";
-            return await _apiClient.Post<AddCounterpartyResp>(endpoint, req);
+            Result<AddCounterpartyResp> result = await _apiClient.Post<AddCounterpartyResp>(endpoint, req);
+            return result;
         }
 
-        public async Task<AddNonRevolutCounterpartyResp> CreateNonRevolutCounterparty(AddNonRevolutCounterpartyReq req)
+        public async Task<Result<AddNonRevolutCounterpartyResp>> CreateNonRevolutCounterparty(AddNonRevolutCounterpartyReq req)
         {
             string endpoint = "/counterparty";
             return await _apiClient.Post<AddNonRevolutCounterpartyResp>(endpoint, req);

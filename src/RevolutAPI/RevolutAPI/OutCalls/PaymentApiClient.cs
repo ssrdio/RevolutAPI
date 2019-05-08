@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using RevolutAPI.Helpers;
 using RevolutAPI.Models.Payment;
 
 namespace RevolutAPI.OutCalls
@@ -15,13 +16,13 @@ namespace RevolutAPI.OutCalls
             _apiClient = client;
         }
 
-        public async Task<TransferResp> GetTransfer(TransferReq req)
+        public async Task<Result<TransferResp>> CreateTransfer(TransferReq req)
         {
             string endpoint = "/transfer";
             return await _apiClient.Post<TransferResp>(endpoint, req);
         }
 
-        public async Task<CreatePaymentResp> CreatePayment(CreatePaymentReq req)
+        public async Task<Result<CreatePaymentResp>> CreatePayment(CreatePaymentReq req)
         {
             string endpoint = "/pay";
             return await _apiClient.Post<CreatePaymentResp>(endpoint, req);
@@ -31,7 +32,7 @@ namespace RevolutAPI.OutCalls
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        public async Task<CreatePaymentResp> SchedulePayment(SchedulePaymentReq req)
+        public async Task<Result<CreatePaymentResp>> SchedulePayment(SchedulePaymentReq req)
         {
             string endpoint = "/pay";
             return await _apiClient.Post<CreatePaymentResp>(endpoint, req);

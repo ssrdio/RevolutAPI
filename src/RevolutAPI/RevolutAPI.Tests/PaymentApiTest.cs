@@ -141,7 +141,7 @@ namespace RevolutAPI.Tests
                 Currency = currency
             };
 
-            var resp = await _paymentClient.GetTransfer(req);
+            var resp = await _paymentClient.CreateTransfer(req);
             Assert.NotNull(resp);
         }
 
@@ -188,7 +188,7 @@ namespace RevolutAPI.Tests
             var transaction = await _paymentClient.SchedulePayment(req);
             Assert.NotNull(transaction);
 
-            var resp = await _paymentClient.CancelPayment(transaction.Id);
+            var resp = await _paymentClient.CancelPayment(transaction.Value.Id);
             Assert.True(resp);
         }
     }

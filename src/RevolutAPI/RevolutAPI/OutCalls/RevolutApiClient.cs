@@ -11,6 +11,8 @@ using RevolutAPI.Models.Payment;
 using Newtonsoft.Json.Serialization;
 
 using Newtonsoft.Json.Linq;
+using RevolutAPI.Helpers;
+using RevolutAPI.Models;
 
 namespace RevolutAPI.OutCalls
 {
@@ -89,7 +91,7 @@ namespace RevolutAPI.OutCalls
             return default(T);
         }
         
-        public async Task<T> Post<T>(string url, object obj)
+        public async Task<Result<T>> Post<T>(string url, object obj)
         {
             string responseContent = "";
             try
@@ -98,24 +100,28 @@ namespace RevolutAPI.OutCalls
                 var response = await _httpClient.PostAsync(_endpoint + url, new StringContent(postData, Encoding.UTF8, "application/json"));
                 if (response.Content != null)
                 {
-                    responseContent = await response.Content.ReadAsStringAsync();    
+                    responseContent = await response.Content.ReadAsStringAsync();
                 }
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<T>(responseContent, _jsonSerializerSettings);
+                    return Result.Ok(JsonConvert.DeserializeObject<T>(responseContent, _jsonSerializerSettings));
+                }
+                else if (!string.IsNullOrEmpty(responseContent))
+                {
+                    return Result.Fail<T>(JsonConvert.DeserializeObject<ErrorModel>(responseContent, _jsonSerializerSettings).Message);
                 }
                 else
                 {
-                    _logger.Error(response.StatusCode + "Error: " + responseContent);
+                    _logger.Error( $"Error posting data. Status code: {response.StatusCode}, Response: null");
                 }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
-            return default(T);
+            return Result.Fail<T>();
         }
-        
+
         public async Task<T> Put<T>(string url, object obj)
         {
             string responseContent = "";

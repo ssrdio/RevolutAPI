@@ -5,6 +5,7 @@ using Xunit;
 using RevolutAPI.OutCalls;
 using System.Net.Http;
 using RevolutAPI.Models.Counterparties;
+using RevolutAPI.Helpers;
 
 namespace RevolutAPI.Tests
 {
@@ -54,10 +55,10 @@ namespace RevolutAPI.Tests
                 Phone = phone
             };
 
-            AddCounterpartyResp resp = await _counterpartiesApiClient.CreateCounterparty(req);
+            Result<AddCounterpartyResp> resp = await _counterpartiesApiClient.CreateCounterparty(req);
             Assert.NotNull(resp);
 
-            var resp2 = await _counterpartiesApiClient.DeleteCounterparty(resp.Id);
+            var resp2 = await _counterpartiesApiClient.DeleteCounterparty(resp.Value.Id);
             Assert.True(resp2);
         }
 
@@ -84,7 +85,7 @@ namespace RevolutAPI.Tests
                 }
             };
 
-            AddNonRevolutCounterpartyResp resp = await _counterpartiesApiClient.CreateNonRevolutCounterparty(req);
+            Result<AddNonRevolutCounterpartyResp>  resp = await _counterpartiesApiClient.CreateNonRevolutCounterparty(req);
             Assert.NotNull(resp);
         }
 
@@ -113,7 +114,7 @@ namespace RevolutAPI.Tests
                 var counterparty = await _counterpartiesApiClient.CreateCounterparty(req);
                 Assert.NotNull(counterparty);
 
-                counterpartyId = counterparty.Id;
+                counterpartyId = counterparty.Value.Id;
             }
 
             bool resp = await _counterpartiesApiClient.DeleteCounterparty(counterpartyId);
