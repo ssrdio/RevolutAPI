@@ -9,6 +9,23 @@ https://revolutdev.github.io/business-api/
 2. Add the RevolutApi project to yout solution
 3. Add a reference to the RevolutApi project
 
+# Authorization and Authentication
+1. generate certificate on machine with openssl (bellow snippet in ubuntu)
+```bash
+openssl genrsa -out privatekey.pem 1024
+openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
+openssl pkcs12 -inkey privatekey.pem -in publickey.cer -export -out revolut_pfx.pfx
+base64 revolut_pfx.pfx
+```
+2. copy public cert into revolut
+```bash
+cat publickey.cer
+```
+3. because .NET core currnetly does not support *.pem certificats we created pfx in previous step now what we need to to is just to base64 encode certificate and we paste it into our configuration
+```bash
+base64 revolut_pfx.pfx
+```
+
 # Revolut API client usage
 The client exposes parts of the Revolut API as `Client` objects (ex. `AccountApiClient`, `PaymentApiClient`).
 In order to create a client you need to:
