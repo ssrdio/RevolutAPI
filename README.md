@@ -26,22 +26,32 @@ cat publickey.cer
 base64 revolut_pfx.pfx
 ```
 
+4. Include nuget package
+
 # Revolut API client usage
-The client exposes parts of the Revolut API as `Client` objects (ex. `AccountApiClient`, `PaymentApiClient`).
-In order to create a client you need to:
-1. Create a `RevolutApiClient` instance, passing the endpoint and authentication token
-2. Pass the `RevolutApiClient` instance to the specific client you wish to use
+## Auth
+This part requres manual work where we need to provide new authorization code every 90 days. 
 
+Call function `AuthorizationApiClient.Authorize` providing all the parameters
 ```c#
-RevolutApiClient revolutApiClient = new RevolutApiClient("[endpoint]", "[token]");
-AccountApiClient accountApiClient = new AccountApiClient(revolutApiClient);
-
-// returns and prints a list of all accounts available
-List<GetAccountResp> accounts = await accountApiClient.GetAccounts();
-foreach (GetAccountResp account in accounts)
+// issuer shuld be without http or https
+Result<AuthorizationCodeResp> authorisationResp = await authorizationApiClient.Authorize("base64enconced pfx cert","certificate password","your domain (issuer)", "clientId provided by revolut", "authorization code provided by revolut");
+// here you save rerresh token
+db.Save(authorisationResp.Value.RefreshToken);
+```
+## Normal usage 
+```c#
+RevolutApiClient revolutApiClient = new RevolutApiClient(settings.Value.RevolutSettings.Endpoint, new RevolutAPI.Models.Authorization.RefreshAccessTokenModel
 {
-    Console.WriteLine(account.Id);
-}
+    PrivateCert = "base64enconced pfx cert",
+    CertificatePassword = "certificate password",
+    ClientId =  "clientId provided by revolut",
+    Issuer = "your domain (issuer)",
+    RefreshToken = db.getLastRefreshToken()
+}, memoryCache);
+
+CounterPartiesApiClient counterPartiesApiClient = new CounterPartiesApiClient(revolutApiClient);
+Result<AddNonRevolutCounterpartyResp> resp = await _counterPartyApiClient.CreateNonRevolutCounterparty(req);
 ```
 
 # API client docs
