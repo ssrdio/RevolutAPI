@@ -1,5 +1,11 @@
 # API documentation
 https://revolutdev.github.io/business-api/
+https://developer.revolut.com/docs/merchant-api/
+
+# Supported API-s
+* Business API 
+* Merchant API
+
 
 # Get NuGet Package
 [RevolutAPI ](https://www.nuget.org/packages/RevolutAPI/)

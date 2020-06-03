@@ -13,5 +13,8 @@ namespace RevolutAPI.Tests
         public static readonly string COUNTERPARTY_ACCOUNT_ID = "";
         // currency must match for both ACCOUNT_ID and COUNTERPARTY_ACCOUNT_ID
         public static readonly string CURRENCY = "EUR";
+
+        public static readonly string MERCHANTAPIKEY = "lhAnTzB2LU1ehOHnoVr4A1DaXbQSdpkjVpS9i7txhOnxpiPb_l_XpbbvnUwlNKcQ";
+        public static readonly string MERCHANTENDPOINT = "https://sandbox-merchant.revolut.com/api/1.0";
     }
 }
