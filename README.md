@@ -1,5 +1,14 @@
+
+[![stable](https://img.shields.io/nuget/v/RevolutAPI.svg?label=stable)](https://www.nuget.org/packages/RevolutAPI//)
+
 # API documentation
 https://revolutdev.github.io/business-api/
+https://developer.revolut.com/docs/merchant-api/
+
+# Supported API-s
+* Business API 
+* Merchant API
+
 
 # Get NuGet Package
 [RevolutAPI ](https://www.nuget.org/packages/RevolutAPI/)
