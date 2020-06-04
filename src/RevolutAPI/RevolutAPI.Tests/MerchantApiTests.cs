@@ -23,7 +23,7 @@ namespace RevolutAPI.Tests
         private IMemoryCache _memoryCache;
         public MerchantApiTests()
         {
-            _merchantApiClient = new MerchantApiClient(new RevolutSimpleClient(Config.MERCHANTENDPOINT, Config.MERCHANTAPIKEY));
+            _merchantApiClient = new MerchantApiClient(new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTENDPOINT));
         }
 
         [Fact]
