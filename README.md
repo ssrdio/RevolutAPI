@@ -9,6 +9,8 @@ https://developer.revolut.com/docs/merchant-api/
 * Business API 
 * Merchant API
 
+# Notes
+For merchant API you only need a merchant API key
 
 # Get NuGet Package
 [RevolutAPI ](https://www.nuget.org/packages/RevolutAPI/)
@@ -18,7 +20,9 @@ https://developer.revolut.com/docs/merchant-api/
 2. Add the RevolutApi project to yout solution
 3. Add a reference to the RevolutApi project
 
-# Authorization and Authentication
+
+# Business API Setup 
+## Authorization and Authentication
 1. generate certificate on machine with openssl (bellow snippet in ubuntu)
 ```bash
 openssl genrsa -out privatekey.pem 1024
