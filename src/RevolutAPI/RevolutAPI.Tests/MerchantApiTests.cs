@@ -9,8 +9,9 @@ using Microsoft.Extensions.DependencyModel;
 using RevolutAPI.Helpers;
 using RevolutAPI.Models.Account;
 using RevolutAPI.Models.Authorization;
-using RevolutAPI.Models.Merchant;
+using RevolutAPI.Models.MerchantApi.Merchant;
 using RevolutAPI.OutCalls;
+using RevolutAPI.OutCalls.MerchantApi;
 using RichardSzalay.MockHttp;
 using Xunit;
 

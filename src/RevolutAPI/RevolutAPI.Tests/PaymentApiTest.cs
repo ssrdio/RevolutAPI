@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Net.Http;
-using RevolutAPI.Models.Payment;
-using RevolutAPI.Models.Account;
 using RevolutAPI.Models.Counterparties;
 using RevolutAPI.OutCalls;
 using Xunit;
 using System.Linq;
+using RevolutAPI.OutCalls.BusinessApi;
+using RevolutAPI.Models.BusinessApi.Payment;
+using RevolutAPI.Models.BusinessApi.Account;
 
 namespace RevolutAPI.Tests
 {

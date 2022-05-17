@@ -4,8 +4,9 @@ using System.Text;
 using Xunit;
 using RevolutAPI.OutCalls;
 using System.Net.Http;
-using RevolutAPI.Models.Counterparties;
 using RevolutAPI.Helpers;
+using RevolutAPI.OutCalls.BusinessApi;
+using RevolutAPI.Models.BusinessApi.Counterparties;
 
 namespace RevolutAPI.Tests
 {

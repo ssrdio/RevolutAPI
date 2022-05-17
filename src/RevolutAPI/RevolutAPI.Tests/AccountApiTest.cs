@@ -5,8 +5,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyModel;
-using RevolutAPI.Models.Account;
+using RevolutAPI.Models.BusinessApi.Account;
 using RevolutAPI.OutCalls;
+using RevolutAPI.OutCalls.BusinessApi;
 using RichardSzalay.MockHttp;
 using Xunit;
 

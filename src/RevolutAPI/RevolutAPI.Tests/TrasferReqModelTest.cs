@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using RevolutAPI.Models.Payment;
+using RevolutAPI.Models.BusinessApi.Payment;
 using RevolutAPI.Tests.Utils;
 using Xunit;
 
