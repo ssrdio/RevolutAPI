@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Net.Http;
-using RevolutAPI.Models.Counterparties;
 using RevolutAPI.OutCalls;
 using Xunit;
 using System.Linq;
 using RevolutAPI.OutCalls.BusinessApi;
 using RevolutAPI.Models.BusinessApi.Payment;
 using RevolutAPI.Models.BusinessApi.Account;
+using Microsoft.Extensions.Caching.Memory;
+using RevolutAPI.Models.Authorization;
 
-namespace RevolutAPI.Tests
+namespace RevolutAPI.Tests.BusinessApi
 {
     public class PaymentApiTest
     {
@@ -16,17 +17,21 @@ namespace RevolutAPI.Tests
         private readonly CounterPartiesApiClient _counterpartyApiClient;
         public readonly AccountApiClient _accountApiClient;
 
-        public PaymentApiTest()
+        private readonly IMemoryCache _memoryCache;
+
+        private readonly RefreshAccessTokenModel _refreshAccessTokenModel;
+
+        public PaymentApiTest(RefreshAccessTokenModel refreshAccessTokenModel)
         {
-            var httpClient = new HttpClient();
-            RevolutApiClient api = new RevolutApiClient(httpClient, Config.ENDPOINT, Config.TOKEN);
+            _refreshAccessTokenModel = refreshAccessTokenModel;
+
+            RevolutApiClient api = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
             _paymentClient = new PaymentApiClient(api);
 
-            var httpClient2 = new HttpClient();
-            RevolutApiClient api2 = new RevolutApiClient(httpClient2, Config.ENDPOINT, Config.TOKEN);
+            RevolutApiClient api2 = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
             _counterpartyApiClient = new CounterPartiesApiClient(api2);
 
-            RevolutApiClient api3 = new RevolutApiClient(Config.ENDPOINT, Config.TOKEN);
+            RevolutApiClient api3 = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
             _accountApiClient = new AccountApiClient(api3);
         }
 
@@ -128,7 +133,7 @@ namespace RevolutAPI.Tests
                 accounts.Remove(accountResp1);
                 accountResp2 = accounts.Where(x => x.Currency == currency).First();
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 throw new Exception($"Missing account with {currency} currency");
             }

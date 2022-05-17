@@ -1,5 +1,5 @@
 ﻿using RevolutAPI.Helpers;
-using RevolutAPI.Models.MerchantApi.Merchant;
+using RevolutAPI.Models.MerchantApi.Orders;
 using System.Threading.Tasks;
 
 namespace RevolutAPI.OutCalls.MerchantApi

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace RevolutAPI.Models.MerchantApi.Merchant
+namespace RevolutAPI.Models.MerchantApi.Orders
 {
     public class RefundOrdredReq
     {

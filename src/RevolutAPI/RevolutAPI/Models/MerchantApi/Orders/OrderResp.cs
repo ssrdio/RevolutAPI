@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace RevolutAPI.Models.MerchantApi.Merchant
+namespace RevolutAPI.Models.MerchantApi.Orders
 {
     public class OrderResp
     {

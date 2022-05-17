@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System;
 
-namespace RevolutAPI.Models.MerchantApi.Merchant
+namespace RevolutAPI.Models.MerchantApi.Orders
 {
     public class CreateOrderReq
     {

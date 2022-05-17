@@ -1,23 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using RevolutAPI.OutCalls;
 using System.Net.Http;
 using RevolutAPI.Helpers;
 using RevolutAPI.OutCalls.BusinessApi;
 using RevolutAPI.Models.BusinessApi.Counterparties;
+using Microsoft.Extensions.Caching.Memory;
+using RevolutAPI.Models.Authorization;
 
-namespace RevolutAPI.Tests
+namespace RevolutAPI.Tests.BusinessApi
 {
     public class CounterpartiesApiTest
     {
         private readonly CounterPartiesApiClient _counterpartiesApiClient;
 
-        public CounterpartiesApiTest()
+        private readonly IMemoryCache _memoryCache;
+
+        private readonly RefreshAccessTokenModel _refreshAccessTokenModel;
+
+        public CounterpartiesApiTest(RefreshAccessTokenModel refreshAccessTokenModel, IMemoryCache memoryCache)
         {
-            HttpClient httpClient = new HttpClient();
-            RevolutApiClient api = new RevolutApiClient(httpClient, Config.ENDPOINT, Config.TOKEN);
+            _memoryCache = memoryCache;
+
+            _refreshAccessTokenModel = refreshAccessTokenModel;
+
+            RevolutApiClient api = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
+
             _counterpartiesApiClient = new CounterPartiesApiClient(api);
         }
 
@@ -44,7 +53,7 @@ namespace RevolutAPI.Tests
             string phone = "+4412345678908";
 
             var counterparties = await _counterpartiesApiClient.GetCounterparties();
-            if(counterparties.Exists(x => x.Phone == phone))
+            if (counterparties.Exists(x => x.Phone == phone))
             {
                 throw new Exception($"Counterparty with {phone} alredy exsists");
             }
@@ -86,7 +95,7 @@ namespace RevolutAPI.Tests
                 }
             };
 
-            Result<AddNonRevolutCounterpartyResp>  resp = await _counterpartiesApiClient.CreateNonRevolutCounterparty(req);
+            Result<AddNonRevolutCounterpartyResp> resp = await _counterpartiesApiClient.CreateNonRevolutCounterparty(req);
             Assert.NotNull(resp);
         }
 
@@ -103,7 +112,7 @@ namespace RevolutAPI.Tests
             {
                 counterpartyId = counterparties.Find(x => x.Phone == phone).Id;
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
                 AddCounterpartyReq req = new AddCounterpartyReq
                 {

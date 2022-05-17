@@ -1,15 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyModel;
 using RevolutAPI.Helpers;
-using RevolutAPI.Models.Account;
-using RevolutAPI.Models.Authorization;
-using RevolutAPI.Models.MerchantApi.Merchant;
+using RevolutAPI.Models.MerchantApi.Orders;
 using RevolutAPI.OutCalls;
 using RevolutAPI.OutCalls.MerchantApi;
 using RichardSzalay.MockHttp;
@@ -17,12 +8,12 @@ using Xunit;
 
 namespace RevolutAPI.Tests
 {
-    public class MerchantApiTests
+    public class OrdersApiTests
     {
         private  MerchantApiClient _merchantApiClient;
         private  MockHttpMessageHandler _mockHttp;
         private IMemoryCache _memoryCache;
-        public MerchantApiTests()
+        public OrdersApiTests()
         {
             _merchantApiClient = new MerchantApiClient(new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTENDPOINT));
         }
@@ -30,7 +21,7 @@ namespace RevolutAPI.Tests
         [Fact]
         public async void TestCreateOrder_Success()
         {
-            Result<OrderResp> order = await _merchantApiClient.CreateOrder(new Models.Merchant.CreateOrderReq
+            Result<OrderResp> order = await _merchantApiClient.CreateOrder(new CreateOrderReq
             {
                 Amount = 11,
                 CaptureMode = CaptureModeEnum.AUTOMATIC,
@@ -48,7 +39,7 @@ namespace RevolutAPI.Tests
         [Fact]
         public async void TestRetriveOrder_Success()
         {
-            Result<OrderResp> order = await _merchantApiClient.CreateOrder(new Models.Merchant.CreateOrderReq
+            Result<OrderResp> order = await _merchantApiClient.CreateOrder(new CreateOrderReq
             {
                 Amount = 11.15d,
                 CaptureMode = CaptureModeEnum.AUTOMATIC,
