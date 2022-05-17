@@ -16,5 +16,11 @@ namespace RevolutAPI.Tests
 
         public static readonly string MERCHANTAPIKEY = "lhAnTzB2LU1ehOHnoVr4A1DaXbQSdpkjVpS9i7txhOnxpiPb_l_XpbbvnUwlNKcQ";
         public static readonly string MERCHANTENDPOINT = "https://sandbox-merchant.revolut.com/api/1.0";
+
+        public static readonly string PrivateCert;
+        public static readonly string CertificatePassword;
+        public static readonly string Issuer;
+        public static readonly string ClientId;
+        public static readonly string RefreshToken;
     }
 }

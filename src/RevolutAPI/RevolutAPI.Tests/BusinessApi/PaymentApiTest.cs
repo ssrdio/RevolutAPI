@@ -17,21 +17,25 @@ namespace RevolutAPI.Tests.BusinessApi
         private readonly CounterPartiesApiClient _counterpartyApiClient;
         public readonly AccountApiClient _accountApiClient;
 
-        private readonly IMemoryCache _memoryCache;
-
-        private readonly RefreshAccessTokenModel _refreshAccessTokenModel;
-
-        public PaymentApiTest(RefreshAccessTokenModel refreshAccessTokenModel)
+        public PaymentApiTest()
         {
-            _refreshAccessTokenModel = refreshAccessTokenModel;
+            RefreshAccessTokenModel refreshAccessTokenModel = new RefreshAccessTokenModel
+            {
+                CertificatePassword = Config.CertificatePassword,
+                ClientId = Config.ClientId,
+                PrivateCert = Config.PrivateCert,
+                RefreshToken = Config.RefreshToken,
+                Issuer = Config.Issuer,
+            };
+            MemoryCache memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-            RevolutApiClient api = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
+            RevolutApiClient api = new RevolutApiClient(Config.ENDPOINT, refreshAccessTokenModel, memoryCache);
             _paymentClient = new PaymentApiClient(api);
 
-            RevolutApiClient api2 = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
+            RevolutApiClient api2 = new RevolutApiClient(Config.ENDPOINT, refreshAccessTokenModel, memoryCache);
             _counterpartyApiClient = new CounterPartiesApiClient(api2);
 
-            RevolutApiClient api3 = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
+            RevolutApiClient api3 = new RevolutApiClient(Config.ENDPOINT, refreshAccessTokenModel, memoryCache);
             _accountApiClient = new AccountApiClient(api3);
         }
 

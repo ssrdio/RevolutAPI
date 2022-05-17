@@ -15,17 +15,20 @@ namespace RevolutAPI.Tests.BusinessApi
     {
         private readonly CounterPartiesApiClient _counterpartiesApiClient;
 
-        private readonly IMemoryCache _memoryCache;
 
-        private readonly RefreshAccessTokenModel _refreshAccessTokenModel;
-
-        public CounterpartiesApiTest(RefreshAccessTokenModel refreshAccessTokenModel, IMemoryCache memoryCache)
+        public CounterpartiesApiTest()
         {
-            _memoryCache = memoryCache;
+            RefreshAccessTokenModel refreshAccessTokenModel = new RefreshAccessTokenModel
+            {
+                CertificatePassword = Config.CertificatePassword,
+                ClientId = Config.ClientId,
+                PrivateCert = Config.PrivateCert,
+                RefreshToken = Config.RefreshToken,
+                Issuer = Config.Issuer,
+            };
+            MemoryCache memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-            _refreshAccessTokenModel = refreshAccessTokenModel;
-
-            RevolutApiClient api = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
+            RevolutApiClient api = new RevolutApiClient(Config.ENDPOINT, refreshAccessTokenModel, memoryCache);
 
             _counterpartiesApiClient = new CounterPartiesApiClient(api);
         }

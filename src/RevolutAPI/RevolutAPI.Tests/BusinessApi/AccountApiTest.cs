@@ -18,17 +18,19 @@ namespace RevolutAPI.Tests.BusinessApi
         private readonly AccountApiClient _accountClient;
         private readonly MockHttpMessageHandler _mockHttp;
 
-        private readonly IMemoryCache _memoryCache;
-
-        private RefreshAccessTokenModel _refreshAccessTokenModel;
-
-        public AccountApiTest(RefreshAccessTokenModel refreshAccessTokenModel, IMemoryCache memoryCache)
+        public AccountApiTest()
         {
-            _memoryCache = memoryCache;
+            RefreshAccessTokenModel refreshAccessTokenModel = new RefreshAccessTokenModel
+            {
+                CertificatePassword = Config.CertificatePassword,
+                ClientId = Config.ClientId,
+                PrivateCert = Config.PrivateCert,
+                RefreshToken = Config.RefreshToken,
+                Issuer = Config.Issuer,
+            };
+            MemoryCache memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-            _refreshAccessTokenModel = refreshAccessTokenModel;
-
-            RevolutApiClient api = new RevolutApiClient(Config.ENDPOINT, _refreshAccessTokenModel, _memoryCache);
+            RevolutApiClient api = new RevolutApiClient(Config.ENDPOINT, refreshAccessTokenModel, memoryCache);
             _accountClient = new AccountApiClient(api);
         }
 
