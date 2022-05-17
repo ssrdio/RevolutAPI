@@ -10,12 +10,12 @@ namespace RevolutAPI.Tests
 {
     public class OrdersApiTests
     {
-        private  MerchantApiClient _merchantApiClient;
+        private  OrderApiClient _merchantApiClient;
         private  MockHttpMessageHandler _mockHttp;
         private IMemoryCache _memoryCache;
         public OrdersApiTests()
         {
-            _merchantApiClient = new MerchantApiClient(new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTENDPOINT));
+            _merchantApiClient = new OrderApiClient(new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTENDPOINT));
         }
 
         [Fact]

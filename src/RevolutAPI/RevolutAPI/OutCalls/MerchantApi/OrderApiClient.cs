@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace RevolutAPI.OutCalls.MerchantApi
 {
-    public class MerchantApiClient
+    public class OrderApiClient
     {
         private readonly RevolutSimpleClient _apiClient;
 
-        public MerchantApiClient(RevolutSimpleClient client)
+        public OrderApiClient(RevolutSimpleClient client)
         {
             _apiClient = client;
         }
