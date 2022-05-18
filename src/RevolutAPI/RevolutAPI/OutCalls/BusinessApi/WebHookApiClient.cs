@@ -13,10 +13,10 @@ namespace RevolutAPI.OutCalls.BusinessApi
             _apiClient = apiClient;
         }
 
-        public async Task<WebHookResp> GetWebHook()
+        public async Task<GetWebHookResp> GetWebHook()
         {
             string endpoint = "/webhook";
-            return await _apiClient.Get<WebHookResp>(endpoint);
+            return await _apiClient.Get<GetWebHookResp>(endpoint);
         }
 
         public async Task<Result<WebHookResp>> CreateWebHook(AddWebHookReq req)
@@ -26,10 +26,10 @@ namespace RevolutAPI.OutCalls.BusinessApi
             return result;
         }
 
-        public async Task<bool> DeleteWebHook()
+        public async Task<WebHookResp> DeleteWebHook()
         {
             string endpoint = "/webhook";
-            return await _apiClient.Delete(endpoint);
+            return await _apiClient.Delete<WebHookResp>(endpoint);
         }
     }
 }
