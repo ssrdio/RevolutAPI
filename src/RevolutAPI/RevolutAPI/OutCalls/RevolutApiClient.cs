@@ -154,7 +154,6 @@ namespace RevolutAPI.OutCalls
             return Result.Fail<T>();
         }
 
-
         public async Task<Result<T>> PostFormData<T>(string url, List<KeyValuePair<string, string>> data)
         {
             string responseContent = "";
