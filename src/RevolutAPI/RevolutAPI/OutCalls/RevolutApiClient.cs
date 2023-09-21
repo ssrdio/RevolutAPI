@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
-using RevolutAPI.Models.Payment;
 using Newtonsoft.Json.Serialization;
-
-using Newtonsoft.Json.Linq;
 using RevolutAPI.Helpers;
 using RevolutAPI.Models;
 using Microsoft.Extensions.Caching.Memory;
@@ -45,7 +41,9 @@ namespace RevolutAPI.OutCalls
         public RevolutApiClient(string endpoint, RefreshAccessTokenModel refreshAccessTokenModel, IMemoryCache memoryCache, HttpClient httpClient = null)
         {
             _memoryCache = memoryCache;
+
             _refreshAccessTokenModel = refreshAccessTokenModel;
+
             if(httpClient == null)
             {
                 _httpClient = new HttpClient();
@@ -126,6 +124,7 @@ namespace RevolutAPI.OutCalls
         public async Task<Result<T>> Post<T>(string url, object obj)
         {
             string responseContent = "";
+            return Result.Ok(JsonConvert.DeserializeObject<T>(responseContent, _jsonSerializerSettings));
             try
             {
                 string token = await GetAccessToken();
@@ -155,7 +154,6 @@ namespace RevolutAPI.OutCalls
             }
             return Result.Fail<T>();
         }
-
 
         public async Task<Result<T>> PostFormData<T>(string url, List<KeyValuePair<string, string>> data)
         {
