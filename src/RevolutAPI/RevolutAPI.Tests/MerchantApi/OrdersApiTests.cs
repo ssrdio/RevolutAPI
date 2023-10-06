@@ -1,9 +1,12 @@
 using Microsoft.Extensions.Caching.Memory;
 using RevolutAPI.Helpers;
 using RevolutAPI.Models.MerchantApi.Orders;
+using RevolutAPI.Models.Shared.Enums;
 using RevolutAPI.OutCalls;
 using RevolutAPI.OutCalls.MerchantApi;
 using RichardSzalay.MockHttp;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace RevolutAPI.Tests
@@ -37,7 +40,7 @@ namespace RevolutAPI.Tests
         }
 
         [Fact]
-        public async void TestRetriveOrder_Success()
+        public async void TestRetrieveOrder_Success()
         {
             Result<OrderResp> order = await _merchantApiClient.CreateOrder(new CreateOrderReq
             {
@@ -53,8 +56,37 @@ namespace RevolutAPI.Tests
 
             OrderResp retrived = await _merchantApiClient.RetriveOrder(order.Value.Id);
 
-
             Assert.Equal(11.15d, retrived.OrderAmount.Value);
+        }
+
+        [Fact]
+        public async void TestRetrieveOrdersSuccess()
+        {
+            List<OrderListResp> orders = await _merchantApiClient.RetrieveOrders();
+
+            Assert.NotNull(orders);
+        }
+
+        [Fact]
+        public async void TestUpdateOrder()
+        {
+            var order = await _merchantApiClient.CreateOrder(new CreateOrderReq
+            {
+                Amount = 10,
+                Currency = "EUR",
+            });
+
+            OrderResp ordersDetails = await _merchantApiClient.RetriveOrder(order.Value.Id);
+
+            UpdateOrderResp orderUpdate = await _merchantApiClient.UpdateOrder(order.Value.Id, new UpdateOrderReq
+            {
+                Amount=100,
+                Currency="EUR"
+            });
+
+            OrderResp newOrdersDetails = await _merchantApiClient.RetriveOrder(order.Value.Id);
+
+            Assert.True(newOrdersDetails.OrderAmount.Value > ordersDetails.OrderAmount.Value);
         }
     }
 }

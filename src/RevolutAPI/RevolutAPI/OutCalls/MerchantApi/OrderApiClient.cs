@@ -1,5 +1,6 @@
 ﻿using RevolutAPI.Helpers;
 using RevolutAPI.Models.MerchantApi.Orders;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RevolutAPI.OutCalls.MerchantApi
@@ -25,10 +26,24 @@ namespace RevolutAPI.OutCalls.MerchantApi
             return result;
         }
 
+        public async Task<List<OrderListResp>> RetrieveOrders()
+        {
+            string endpoint = "/orders";
+            List<OrderListResp> result = await _apiClient.Get<List<OrderListResp>>(endpoint);
+            return result;
+        }
+
         public async Task<OrderResp> RetriveOrder(string orderId)
         {
             string endpoint = $"/orders/{orderId}";
             OrderResp result = await _apiClient.Get<OrderResp>(endpoint);
+            return result;
+        }
+
+        public async Task<UpdateOrderResp> UpdateOrder(string orderId, UpdateOrderReq req)
+        {
+            string endpoint = $"/orders/{orderId}";
+            UpdateOrderResp result = await _apiClient.Patch<UpdateOrderResp>(endpoint, req);
             return result;
         }
 
