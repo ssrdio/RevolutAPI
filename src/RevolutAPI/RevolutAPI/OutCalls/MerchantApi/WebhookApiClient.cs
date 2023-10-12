@@ -53,7 +53,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
             return result;
         }
 
-        public async Task<bool> DeletePaymentMethod(string webhookId)
+        public async Task<bool> DeleteWebhook(string webhookId)
         {
             if (string.IsNullOrEmpty(webhookId))
             {

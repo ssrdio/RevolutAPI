@@ -1,5 +1,6 @@
 using RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment;
 using RevolutAPI.AutomaticCardPayment.Features.Customers;
+using RevolutAPI.AutomaticCardPayment.Features.Webhooks;
 using RevolutAPI.AutomaticCardPayment.Infrastrucutre.DAO;
 using RevolutAPI.AutomaticCardPayment.Infrastrucutre.Database;
 using RevolutAPI.AutomaticCardPayment.Infrastrucutre.Models;
@@ -19,6 +20,7 @@ builder.Services.AddTransient<CustomersPaymentMethodsDAO>();
 builder.Services.AddTransient<AutomaticChargeDAO>();
 builder.Services.AddScoped<AutomaticPaymentService>();
 builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<WebhookService>();
 
 var app = builder.Build();
 
@@ -35,7 +37,7 @@ using (var scope = app.Services.CreateScope())
     CustomersDBContext context = scope.ServiceProvider.GetRequiredService<CustomersDBContext>();
     context.Database.EnsureCreated();
     context.SaveChanges();
-    
+
 }
 
 

@@ -9,8 +9,7 @@ namespace RevolutAPI.Models.MerchantApi.Webhook
         [JsonProperty("url")]
         public string Url { get; set; }
 
-        [JsonProperty("events")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty("events", ItemConverterType = typeof(StringEnumConverter))]
         public List<WebhookTypeEnum> Events { get; set; }
     }
 }

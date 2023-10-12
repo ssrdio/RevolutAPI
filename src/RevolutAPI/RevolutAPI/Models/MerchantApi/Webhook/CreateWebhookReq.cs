@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RevolutAPI.Models.MerchantApi.Webhook
 {
@@ -11,8 +9,7 @@ namespace RevolutAPI.Models.MerchantApi.Webhook
         [JsonProperty("url")]
         public string Url { get; set; }
 
-        [JsonProperty("events")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty("events", ItemConverterType = typeof(StringEnumConverter))]
         public List<WebhookTypeEnum> Events { get; set; }
     }
 }
