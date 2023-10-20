@@ -1,4 +1,4 @@
-﻿namespace RevolutAPI.Models.MerchantApi.Orders
+﻿namespace RevolutAPI.Models.Shared.Enums
 {
     public enum CaptureModeEnum
     {

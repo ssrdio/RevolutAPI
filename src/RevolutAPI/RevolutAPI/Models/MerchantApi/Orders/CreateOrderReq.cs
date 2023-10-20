@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using RevolutAPI.Models.Shared.Enums;
 using System;
 
 namespace RevolutAPI.Models.MerchantApi.Orders
@@ -27,6 +28,9 @@ namespace RevolutAPI.Models.MerchantApi.Orders
 
         [JsonProperty("customer_email")]
         public string CustomerEmail { get; set; }
+
+        [JsonProperty("customer_id")]
+        public string CustomerId { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }

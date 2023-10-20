@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using RevolutAPI.Models.Shared.Enums;
 using System;
 
 namespace RevolutAPI.Models.MerchantApi.Orders
@@ -12,10 +14,12 @@ namespace RevolutAPI.Models.MerchantApi.Orders
         public string PublicId { get; set; }
 
         [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public OrderTypeEnum Type { get; set; }
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public OrderStateEnum State { get; set; }
 
         [JsonProperty("created_at")]
         public DateTimeOffset CreatedAt { get; set; }
@@ -69,7 +73,8 @@ namespace RevolutAPI.Models.MerchantApi.Orders
         public string Id { get; set; }
 
         [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public OrderTypeEnum Type { get; set; }
 
         [JsonProperty("amount")]
         public Amount Amount { get; set; }

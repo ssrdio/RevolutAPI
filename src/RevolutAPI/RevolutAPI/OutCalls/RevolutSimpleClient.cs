@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection.Metadata;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RevolutAPI.OutCalls
@@ -25,6 +27,8 @@ namespace RevolutAPI.OutCalls
             _endpoint = endpoint;
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36");
+            _httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
             _jsonSerializerSettings = new JsonSerializerSettings
             {
                 ContractResolver = new DefaultContractResolver
@@ -202,6 +206,46 @@ namespace RevolutAPI.OutCalls
                 _logger.Error(ex);
             }
             return false;
+        }
+
+        public async Task<T> Patch<T>(string url, object obj)
+        {
+            string responseContent = "";
+
+            try
+            {
+                string postData = JsonConvert.SerializeObject(obj);
+
+                StringContent content = new StringContent(postData, Encoding.UTF8, "application/json");
+                HttpMethod patchMethod = new HttpMethod("PATCH");
+
+                HttpRequestMessage patchRequest = new HttpRequestMessage(patchMethod, _endpoint + url)
+                {
+                    Content = content
+                };
+
+                HttpResponseMessage response = await _httpClient.SendAsync(patchRequest);
+
+
+                if (response.Content != null)
+                {
+                    responseContent = await response.Content.ReadAsStringAsync();
+                }
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<T>(responseContent, _jsonSerializerSettings);
+                }
+                else
+                {
+                    _logger.Error(response.StatusCode + "Error: " + responseContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+
+            return default(T);
         }
     }
 }
