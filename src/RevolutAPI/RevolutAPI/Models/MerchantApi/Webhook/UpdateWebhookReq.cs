@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 
 namespace RevolutAPI.Models.MerchantApi.Webhook
 {
-    public class CreateWebhookReq
+    public class UpdateWebhookReq
     {
         [JsonProperty("url")]
         public string Url { get; set; }
