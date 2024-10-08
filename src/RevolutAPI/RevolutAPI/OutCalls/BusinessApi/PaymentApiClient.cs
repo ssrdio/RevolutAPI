@@ -60,58 +60,34 @@ namespace RevolutAPI.OutCalls.BusinessApi
             return await _apiClient.Get<CheckPaymentStatusResp>(endpoint);
         }
 
-        public async Task<List<TransactionResp>> GetTransactions(DateTime? from, DateTime? to, string type = null, string counterparty = null)
+        public async Task<List<TransactionResp>> GetTransactions(DateTime? from, DateTime? to, string type = null,int count = 100, string counterparty = null)
         {
             string parameters = "";
-            string endpoint = string.Format("/transactions?");
-            bool addAsAnd = false;
+            string endpoint = $"/transactions?count={count}";
+
+           
             if (from.HasValue)
             {
                 string fromDate = from.Value.ToString("yyyy-MM-dd");
-                endpoint += $"from={fromDate}";
-                addAsAnd = true;
+                endpoint += $"&from={fromDate}";
             }
-            
+
 
             if (!string.IsNullOrEmpty(type))
             {
-                if (addAsAnd)
-                {
-                    endpoint += "&type=" + type;
-                }
-                else 
-                {
-                    endpoint += "type=" + type;
-                    addAsAnd = true;
-                }
+                endpoint += "&type=" + type;
             }
 
             if (to.HasValue)
             {
                 string toDate = to.Value.ToString("yyyy-MM-dd");
-                if(addAsAnd)
-                {
-                    endpoint += "&to=" + toDate;
-                }
-                else
-                {
-                    endpoint += $"to={toDate}";
-                    addAsAnd = true;
-                }
-                
+                endpoint += "&to=" + toDate;
             }
+
 
             if (!string.IsNullOrEmpty(counterparty))
             {
-                if (addAsAnd)
-                {
-                    endpoint += "&counterparty=" + counterparty;
-                }
-                else
-                {
-                    endpoint += "counterparty=" + counterparty;
-                    addAsAnd = true;
-                }
+                endpoint += "&counterparty=" + counterparty;
             }
 
             return await _apiClient.Get<List<TransactionResp>>(endpoint);
