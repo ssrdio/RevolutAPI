@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using RevolutAPI.Helpers;
 using RevolutAPI.Models.BusinessApi.Payment;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RevolutAPI.OutCalls.BusinessApi
 {
@@ -59,29 +60,58 @@ namespace RevolutAPI.OutCalls.BusinessApi
             return await _apiClient.Get<CheckPaymentStatusResp>(endpoint);
         }
 
-        public async Task<List<TransactionResp>> GetTransactions(DateTime from, DateTime to, string type, string counterparty = null)
+        public async Task<List<TransactionResp>> GetTransactions(DateTime? from, DateTime? to, string type = null, string counterparty = null)
         {
-            if (from == null)
+            string parameters = "";
+            string endpoint = string.Format("/transactions?");
+            bool addAsAnd = false;
+            if (from.HasValue)
             {
-                throw new ArgumentNullException(nameof(from));
+                string fromDate = from.Value.ToString("yyyy-MM-dd");
+                endpoint += $"from={fromDate}";
+                addAsAnd = true;
+            }
+            
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                if (addAsAnd)
+                {
+                    endpoint += "&type=" + type;
+                }
+                else 
+                {
+                    endpoint += "type=" + type;
+                    addAsAnd = true;
+                }
             }
 
-            if (string.IsNullOrEmpty(type))
+            if (to.HasValue)
             {
-                throw new ArgumentException("type parameter cannot be null or empty");
-            }
-            string fromParam = from.ToString("yyyy-MM-dd");
-            string endpoint = string.Format("/transactions?from={0}&type={1}", fromParam, type);
-
-            if (to != null || to != DateTime.MinValue)
-            {
-                string toParam = to.ToString("yyyy-MM-dd");
-                endpoint += "&to=" + toParam;
+                string toDate = to.Value.ToString("yyyy-MM-dd");
+                if(addAsAnd)
+                {
+                    endpoint += "&to=" + toDate;
+                }
+                else
+                {
+                    endpoint += $"to={toDate}";
+                    addAsAnd = true;
+                }
+                
             }
 
             if (!string.IsNullOrEmpty(counterparty))
             {
-                endpoint += "&counterparty=" + counterparty;
+                if (addAsAnd)
+                {
+                    endpoint += "&counterparty=" + counterparty;
+                }
+                else
+                {
+                    endpoint += "counterparty=" + counterparty;
+                    addAsAnd = true;
+                }
             }
 
             return await _apiClient.Get<List<TransactionResp>>(endpoint);
