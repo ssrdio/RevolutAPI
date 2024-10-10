@@ -124,7 +124,6 @@ namespace RevolutAPI.OutCalls
         public async Task<Result<T>> Post<T>(string url, object obj)
         {
             string responseContent = "";
-            return Result.Ok(JsonConvert.DeserializeObject<T>(responseContent, _jsonSerializerSettings));
             try
             {
                 string token = await GetAccessToken();

@@ -8,7 +8,7 @@
     <RepositoryUrl>https://github.com/ssrdio/RevolutAPI</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Revolut, OpenAPI, Revolut API client</PackageTags>
-    <Version>3.3.3</Version>
+    <Version>3.3.4</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
