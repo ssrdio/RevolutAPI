@@ -120,7 +120,29 @@ namespace RevolutAPI.OutCalls
             }
             return default(T);
         }
-        
+        public async Task<string> Get(string url)
+        {
+            try
+            {
+                string token = await GetAccessToken();
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = await _httpClient.GetAsync(_endpoint + url);
+                if (response.IsSuccessStatusCode && response.Content != null)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+
+                _logger.Error($"Error: {response.StatusCode} - {response.Content?.ReadAsStringAsync()}");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Failed to fetch raw response.");
+            }
+
+            return null;
+        }
+
         public async Task<Result<T>> Post<T>(string url, object obj)
         {
             string responseContent = "";
@@ -215,7 +237,37 @@ namespace RevolutAPI.OutCalls
             }
             return default(T);
         }
-        
+
+        public async Task<T> Patch<T>(string url, object obj)
+        {
+            string responseContent = "";
+            try
+            {
+                string token = await GetAccessToken();
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                string postData = JsonConvert.SerializeObject(obj);
+                var response = await _httpClient.PatchAsync(_endpoint + url, new StringContent(postData, Encoding.UTF8, "application/json"));
+                if (response.Content != null)
+                {
+                    responseContent = await response.Content.ReadAsStringAsync();
+                }
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<T>(responseContent, _jsonSerializerSettings);
+                }
+                else
+                {
+                    _logger.Error(response.StatusCode + "Error: " + responseContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return default(T);
+        }
+
+
         public async Task<T> Delete<T>(string url)
         {
             string responseContent = "";

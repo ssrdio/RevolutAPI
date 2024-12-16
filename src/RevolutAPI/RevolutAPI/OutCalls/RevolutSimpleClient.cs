@@ -22,11 +22,12 @@ namespace RevolutAPI.OutCalls
         private JsonSerializerSettings _jsonSerializerSettings;
       
 
-        public RevolutSimpleClient(string token, string endpoint = "https://merchant.revolut.com/api/1.0")
+        public RevolutSimpleClient(string token, string version, string endpoint = "https://merchant.revolut.com/api/1.0")
         {
             _endpoint = endpoint;
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Add("Revolut-Api-Version", version);
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36");
             _httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
             _jsonSerializerSettings = new JsonSerializerSettings
@@ -68,7 +69,26 @@ namespace RevolutAPI.OutCalls
             }
             return default(T);
         }
+        public async Task<string> Get(string url)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync(_endpoint + url);
+                if (response.IsSuccessStatusCode && response.Content != null)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
 
+                _logger.Error($"Error: {response.StatusCode} - {response.Content?.ReadAsStringAsync()}");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Failed to fetch raw response.");
+            }
+
+            return null;
+        }
+       
         public async Task<Result<T>> Post<T>(string url, object obj)
         {
             string responseContent = "";
@@ -207,26 +227,13 @@ namespace RevolutAPI.OutCalls
             }
             return false;
         }
-
         public async Task<T> Patch<T>(string url, object obj)
         {
             string responseContent = "";
-
             try
             {
                 string postData = JsonConvert.SerializeObject(obj);
-
-                StringContent content = new StringContent(postData, Encoding.UTF8, "application/json");
-                HttpMethod patchMethod = new HttpMethod("PATCH");
-
-                HttpRequestMessage patchRequest = new HttpRequestMessage(patchMethod, _endpoint + url)
-                {
-                    Content = content
-                };
-
-                HttpResponseMessage response = await _httpClient.SendAsync(patchRequest);
-
-
+                var response = await _httpClient.PatchAsync(_endpoint + url, new StringContent(postData, Encoding.UTF8, "application/json"));
                 if (response.Content != null)
                 {
                     responseContent = await response.Content.ReadAsStringAsync();
@@ -244,8 +251,47 @@ namespace RevolutAPI.OutCalls
             {
                 _logger.Error(ex);
             }
-
             return default(T);
         }
+
+        //public async Task<T> Patch<T>(string url, object obj)
+        //{
+        //    string responseContent = "";
+
+        //    try
+        //    {
+        //        string postData = JsonConvert.SerializeObject(obj);
+
+        //        StringContent content = new StringContent(postData, Encoding.UTF8, "application/json");
+        //        HttpMethod patchMethod = new HttpMethod("PATCH");
+
+        //        HttpRequestMessage patchRequest = new HttpRequestMessage(patchMethod, _endpoint + url)
+        //        {
+        //            Content = content
+        //        };
+
+        //        HttpResponseMessage response = await _httpClient.SendAsync(patchRequest);
+
+
+        //        if (response.Content != null)
+        //        {
+        //            responseContent = await response.Content.ReadAsStringAsync();
+        //        }
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            return JsonConvert.DeserializeObject<T>(responseContent, _jsonSerializerSettings);
+        //        }
+        //        else
+        //        {
+        //            _logger.Error(response.StatusCode + "Error: " + responseContent);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Error(ex);
+        //    }
+
+        //    return default(T);
+        //}
     }
 }

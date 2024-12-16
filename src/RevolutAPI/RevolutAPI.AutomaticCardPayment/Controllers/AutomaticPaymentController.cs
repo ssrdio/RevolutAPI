@@ -4,7 +4,7 @@ using RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment;
 using RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment.Models;
 using RevolutAPI.AutomaticCardPayment.Infrastrucutre.Models.Entities;
 using RevolutAPI.Helpers;
-using RevolutAPI.Models.MerchantApi.Orders;
+using RevolutAPI.Models.MerchantApi.Payments;
 
 namespace RevolutAPI.AutomaticCardPayment.Controllers
 {
@@ -32,7 +32,7 @@ namespace RevolutAPI.AutomaticCardPayment.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrderAndPay([FromQuery] string customerId, [FromQuery] double amount, [FromQuery] string? paymentMethodId)
         {
-            Result<ConfirmOrderResp> result = await _automaticPaymentService.CreateOrderAndPay(customerId, amount, paymentMethodId);
+            Result<PayForAnOrderResp> result = await _automaticPaymentService.CreateOrderAndPay(customerId, amount, paymentMethodId);
             if (result.Failure)
             {
                 return BadRequest();

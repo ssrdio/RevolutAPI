@@ -16,7 +16,7 @@ namespace RevolutAPI.OutCalls.BusinessApi
 
         public async Task<List<GetAccountResp>> GetAccounts()
         {
-            string endpoint = "/accounts";
+            string endpoint = "/1.0/accounts";
             return await _apiClient.Get<List<GetAccountResp>>(endpoint);
         }
 
@@ -27,7 +27,7 @@ namespace RevolutAPI.OutCalls.BusinessApi
                 throw new ArgumentException();
             }
 
-            string endpoint = "/accounts/" + id;
+            string endpoint = "/1.0/accounts/" + id;
             return await _apiClient.Get<GetAccountResp>(endpoint);
         }
 
@@ -38,7 +38,7 @@ namespace RevolutAPI.OutCalls.BusinessApi
                 throw new ArgumentException();
             }
 
-            string endpoint = "/accounts/" + id + "/bank-details";
+            string endpoint = "/1.0/accounts/" + id + "/bank-details";
             return await _apiClient.Get<List<GetAccountDetailsResp>>(endpoint);
         }
     }

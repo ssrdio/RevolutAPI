@@ -1,5 +1,6 @@
 ﻿using RevolutAPI.Helpers;
 using RevolutAPI.Models.MerchantApi.Orders;
+using RevolutAPI.Models.MerchantApi.Payments;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,52 +23,39 @@ namespace RevolutAPI.OutCalls.MerchantApi
         /// <param name="orderId"></param>
         /// <param name="confirmOrderReq"></param>
         /// <returns></returns>
-        public async Task<Result<ConfirmOrderResp>> ConfirmOrder(string orderId, ConfirmOrderReq confirmOrderReq)
+        public async Task<Result<PayForAnOrderResp>> ConfirmOrder(string orderId, PayForAnOrderReq confirmOrderReq)
         {
             if (string.IsNullOrEmpty(orderId))
             {
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/orders/{orderId}/payments";
-            Result<ConfirmOrderResp> result = await _apiClient.Post<ConfirmOrderResp>(endpoint, confirmOrderReq);
+            string endpoint = $"/api/orders/{orderId}/payments";
+            Result<PayForAnOrderResp> result = await _apiClient.Post<PayForAnOrderResp>(endpoint, confirmOrderReq);
             return result;
         }
 
-        public async Task<List<PaymentDetailsResponse>> RetrievePayments(string orderId)
+        public async Task<List<GetPaymentListOfAnOrderResp>> RetrievePaymentListOfAnOrder(string orderId)
         {
             if (string.IsNullOrEmpty(orderId))
             {
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/orders/{orderId}/payments";
-            List<PaymentDetailsResponse> result = await _apiClient.Get<List<PaymentDetailsResponse>>(endpoint);
+            string endpoint = $"/api/orders/{orderId}/payments";
+            List<GetPaymentListOfAnOrderResp> result = await _apiClient.Get<List<GetPaymentListOfAnOrderResp>>(endpoint);
             return result;
         }
 
-        public async Task<PaymentDetailsResponse> RetrievePaymentDetails(string paymentId)
+        public async Task<GetPaymentDetailsResp> RetrievePaymentDetails(string paymentId)
         {
-            if (string.IsNullOrEmpty(paymentId))
-            {
-                throw new ArgumentException();
-            }
-
-            string endpoint = $"/payments/{paymentId}";
-            PaymentDetailsResponse result = await _apiClient.Get<PaymentDetailsResponse>(endpoint);
+            string endpoint = $"/api/payments/{paymentId}";
+            GetPaymentDetailsResp result = await _apiClient.Get<GetPaymentDetailsResp> (endpoint);
             return result;
         }
 
-        public async Task<List<OrdersPaymentResp>> RetrievePaymentListOfOrder(string orderId)
-        {
-            if (string.IsNullOrEmpty(orderId))
-            {
-                throw new ArgumentException();
-            }
 
-            string endpoint = $"/orders/{orderId}/payments";
-            List<OrdersPaymentResp> result = await _apiClient.Get<List<OrdersPaymentResp>>(endpoint);
-            return result;
-        }
+
+
     }
 }

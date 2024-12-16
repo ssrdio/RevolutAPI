@@ -12,7 +12,11 @@ namespace RevolutAPI.Models.MerchantApi.Webhook
         /// period passes. Otherwise, it is invalidated immediately.
         /// Maximum expiration period is 7 days.
         /// </remarks>
-        [JsonProperty("expiration_period")]
+        [JsonProperty("expiration_period",NullValueHandling = NullValueHandling.Ignore)]
         public string ExpirationPeriod { get; set; }
+        public RotateWebhookSigningSecretReq(string expirationPeriod = null)
+        {
+            ExpirationPeriod = expirationPeriod;
+        }
     }
 }

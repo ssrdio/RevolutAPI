@@ -2,16 +2,16 @@
 [![stable](https://img.shields.io/nuget/v/RevolutAPI.svg?label=stable)](https://www.nuget.org/packages/RevolutAPI//)
 
 # API documentation
-https://revolutdev.github.io/business-api/
+https://developer.revolut.com/docs/merchant/merchant-api
 
-https://developer.revolut.com/docs/merchant-api/
+https://developer.revolut.com/docs/business/business-api
 
 # Supported API-s
 * Business API 
 * Merchant API
 
 # Notes
-For merchant API you only need a merchant API key
+For merchant API you only need a merchant API key and API version
 
 # Get NuGet Package
 [RevolutAPI ](https://www.nuget.org/packages/RevolutAPI/)
@@ -68,29 +68,138 @@ CounterPartiesApiClient counterPartiesApiClient = new CounterPartiesApiClient(re
 Result<AddNonRevolutCounterpartyResp> resp = await _counterPartyApiClient.CreateNonRevolutCounterparty(req);
 ```
 
-# API client docs
-### AccountApiClient:
+
+# BusinessApi client docs:
+### [AccountApiClient](https://developer.revolut.com/docs/business/accounts)
 * `GetAccounts()` -  Retrieves your accounts
 * `GetAccount(string id)` - Retrieves one of your accounts by ID
-* `GetAccountDetails()` - Retrieves individual account details
+* `GetAccountDetails(string id)` - Retrieves individual account details
 
-### CounterPartiesApiClient
-* `CreateCounterparty()` - Create a counterparty for an existing Revolut user.
-* `CreateCounterparty(AddCounterpartyReq req)` - You can create a counterparty for an non-Revolut bank account.
-* `CreateNonRevolutCounterparty(AddNonRevolutCounterpartyReq req)` - Create a counterparty for an non-Revolut bank account.
+### [CardApiClient](https://developer.revolut.com/docs/business/cards)
+* `GetCards(GetCardsReq request)` -  Get the list of all cards in your organisation. The results are paginated and sorted by the created_at date in reverse chronological order.
+* `GetCardDetails(string card_id)` -  Get the details of a specific card, based on its ID.
+* `GetSensitiveCardDetails(string card_id)` -  Get sensitive details of a specific card, based on its ID. Requires the READ_SENSITIVE_CARD_DATA ``token scope.
+* `CreateCard(CreateCardReq request)` -  Create a new card for an existing member of your Revolut Business team. When using the API, you can create only virtual cards. To create a physical card, use the Revolut Business app.
+* `UpdateCardDetails(string card_id, UpdateCardReq request)` -  Update details of a specific card, based on its ID.
+* `TerminateCard(string card_id)` -  Terminate a specific card, based on its ID. Once the card is terminated, it will not be returned by the API. A successful response does not get any content in return.
+* `FreezeCard(string card_id)` -  Freeze a card to make it temporarily unavailable for spending. You can only freeze a card that is in the state active. A successful freeze changes the card's state to frozen, and no content is returned in the response.
+* `UnfreezeCard(string card_id)` -  Unfreeze a card to re-enable spending for that card. You can only unfreeze a card that is in the state frozen. A successful unfreeze changes the card's state back to active, and no content is returned in the response.
+
+### [CounterPartiesApiClient](https://developer.revolut.com/docs/business/counterparties)
+* `CreateCounterparty(CreateCounterpartyReq request)` - Create a new counterparty to transact with. Depending on which country a counterparty account is based in, the fields that you need to specify are different.
 * `DeleteCounterparty(string id)` - Deletes a counterparty with the given ID. Once a counterparty is deleted no payments can be made to it.
 * `GetCounterparty(string id)` - Retrieves a counterparty by ID.
 * `GetCounterparties()` - Retrieves all your counterparties.
 
-### PaymentApiClient
-* `GetTransfer(TransferReq req)` - Processes transfers between accounts of the business with the same currency.
-* `CreatePayment(CreatePaymentReq req)` - Creates a new payment. If the payment is for another Revolut account, business or personal.
-* `SchedulePayment(SchedulePaymentReq req)` - Schedule an internal payments for up to 30 days ahead. Scheduling external payments is not supported at the moment. Scheduled payments must be in the currency of the account from which you pay.
-* `CheckPaymentStatusByTransactionId(string transactionId)` - Retrieves transaction details by transaction ID. It also allows you to find out more about the transaction, such as cardholder details for card payments.
-* `CheckPaymentStatusByRequestId(string requestId)` - Retrieves transaction details by transaction ID or by request ID. It also allows you to find out more about the transaction, such as cardholder details for card payments.
-* `CancelPayment(string transactionId)` - Cancel a scheduled transaction that was initiated by you, via API.
-* `GetTransactions(DateTime from, DateTime to, string type, string counterparty = null)` - Retrieves historical transactions based on the provided query criteria.
-* `GetTransactions(string from = null, string to = null, string counterparty = null, int count = 0, string type = null)` - Retrieves historical transactions based on the provided query criteria.
+### [ExpensesApiClient](https://developer.revolut.com/docs/business/expenses)
+* `GetExpenses(GetExpensesReq request)` -  Get all your expenses, or use the query parameters to filter the results.
+* `GetExpense(string expense_id)` -  Get the information about a specific expense by ID.
+
+### [ForeignExchangeApiClient](https://developer.revolut.com/docs/business/foreign-exchange)
+* `GetExchangeRate(GetExchangeRateReq request)` -  Get the sell exchange rate between two currencies.
+* `Exchange(ExchangeMoneyReq request)` - Exchange money using one of these methods:  
+  - `Sell currency`:  You know the amount of currency to sell. For example, you want to exchange 135.5 USD to some EUR.  
+    Specify the amount in the `from` object.
+
+  - `Buy currency`: You know the amount of currency to buy. For example, you want to exchange some USD to 200 EUR.
+    Specify the amount in the  `to` object.
+
+### [PaymentDraftsApiClient](https://developer.revolut.com/docs/business/payment-drafts)
+* `GetPaymentDrafts()` -  Get the list of payment drafts created with the API that haven't been sent for processing.
+* `GetPaymentDraft(string payment_draft_id)` -  Get the information about a specific payment draft by ID. The response lists the details of the payment(s) included in the draft, as well as the draft details.
+* `CreatePaymentDraft(CreatePaymentDraftReq request)` -  Create a payment draft. When you create a payment draft, it stays a draft until you send it for processing as payment in the Revolut Business app. Until then, you can delete the draft if you no longer wish to proceed with it.
+* `DeletePaymentDraft(string payment_draft_id)` -  Delete a payment draft with the given ID. You can delete a payment draft only if it hasn't been sent for processing.
+
+### [PayoutLinksApiClient](https://developer.revolut.com/docs/business/payout-links)
+* `GetPayoutLinks(GetPayoutLinksReq request)` -  Get all the links that you have created, or use the query parameters to filter the results. The links are sorted by the `created_at` date in reverse chronological order. The returned links are paginated. The maximum number of payout links returned per page is specified by the `limit` parameter. To get to the next page, make a new request and use the `created_at` date of the last payout link returned in the previous response.
+* `GetPayoutLink(string payout_link_id)` -  Get the information about a specific link by its ID.
+* `CreatePayoutLink(CreatePayoutLinkReq request)` -  Create a payout link to send money even when you don't have the full banking details of the counterparty.
+After you have created the link, send it to the recipient so that they can claim the payment.
+* `CanclePayoutLink(string payout_link_id)` -  Cancel a payout link. You can only cancel a link that hasn't been claimed yet. A successful request does not get any content in response.
+* `GetTransferReasons()` -  In order to initiate a transfer in certain currencies and countries, you must provide a transfer reason. With this endpoint you can retrieve all transfer reasons available to your business account per country and currency. After you retrieve the results, use the appropriate reason code in the `transfer_reason_code` field when making a transfer to a counterparty or creating a payout link.
+
+### [TransactionApiClient](https://developer.revolut.com/docs/business/transactions)
+* `GetTransactions(GetTransactionsReq request)` -  Retrieve the historical transactions based on the provided query criteria.The transactions are sorted by the `created_at` date in reverse chronological order, and they're paginated. The maximum number of transactions returned per page is specified by the `count` parameter. To get the next page of results, make a new request and use the `created_at` date from the last item of the previous page as the value for the `to` parameter.
+* `GetTransaction(string transaction_id)` -  Retrieve the details of a specific transaction. The details can include, for example, cardholder details for card payments.
+
+### [TransferApiClient](https://developer.revolut.com/docs/business/transfers)
+* `TransferMoneyBetweenAccounts(TransferBetweenAccountsReq request)` -  Move money between the Revolut accounts of the business in the same currency.
+The resulting transaction has the type `transfer`.
+* `TransferToAnotherAccountOrCard(TransferToAnotherAccountOrCardReq request)` -  Make a payment to a counterparty. You can choose either a bank transfer or a card transfer. The resulting transaction has the type `transfer`.
+If you make the payment to another Revolut account, either business or personal, the transaction is executed instantly.
+If the counterparty has multiple payment methods available, for example, 2 accounts, or 1 account and 1 card, you must specify the account or card to which you want to transfer the money (`receiver.account_id` or `receiver.card_id` respectively) .
+
+### [TeamMemberApiClient](https://developer.revolut.com/docs/business/team-members)
+* `GetTeamMemebers(GetTeamMembersReq request)` -  Get information about all the team members of your business.
+* `InviteNewMember(InviteMemberReq request)` -  Invite a new member to your business account.
+When you invite a new team member to your business account, an invitation is sent to their email address that you provided in this request. To join your business account, the new team member has to accept this invitation.
+
+### [WebhookApiClient](https://developer.revolut.com/docs/business/webhooks-v-2)
+* `GetWebhooks()` -  Get the list of all your existing webhooks and their details.
+* `GetWebhook(string webhook_id)` -  Get the information about a specific webhook by ID.
+* `CreateWebhook(CreateWebhookReq request)` -  Create a new webhook to receive event notifications to the specified URL. Provide a list of event types that you want to subscribe to and a URL for the webhook. Only HTTPS URLs are supported.
+* `UpdateWebhook(string webhook_id,UpdateWebhookReq request)` -  Update an existing webhook. Change the URL to which event notifications are sent or the list of event types to be notified about.
+You must specify at least one of these two. The fields that you don't specify are not updated.
+* `DeleteWebhook(string webhook_id)` -  Delete a specific webhook.
+A successful response does not get any content in return.
+* `Rotate(string webhook_id, RotateWebhookReq request)` - Rotate a signing secret for a specific webhook.
+* `GetFailedWebhookEvents(string webhook_id, GetFailedWebhookEventsReq request)` - Get the list of all your failed webhook events, or use the query parameters to filter the results.
+The events are sorted by the `created_at` date in reverse chronological order.
+The returned failed events are paginated. The maximum number of events returned per page is specified by the `limit` parameter. To get to the next page, make a new request and use the `created_at` date of the last event returned in the previous response.
+
+# MerchantApi client docs:
+
+### [OrderApiClient](https://developer.revolut.com/docs/merchant/orders)
+* `GetOrderList(GetOrderListReq request)` -  Retrieve all the orders that you've created. 
+* `GetOrder(string order_id)` -  Retrieve the details of an order that has been created. Provide the unique order ID, and the corresponding order information is returned. 
+* `CreateOrder(CreateOrderReq request)` -  Create an Order `object`.
+Creating orders is one of the basic operations of the Merchant API. Most of the other operations are related to creating orders. Furthermore, the payment methods merchants can use to take payments for their orders are also building on order creation.
+* `UpdateOrder(string order_id, UpdateOrderReq request)` -  You can update an order and specific parameters based on the value of the `state` parameter. 
+* `CaptureOrder(string order_id, CaptureOrderReq request)` -  This endpoint is used to capture the funds of an existing, uncaptured order. When the payment for an order is authorised, you can capture the order to send it to the processing stage.
+* `CancelOrder(string order_id)` -  Cancel an existing uncaptured order.
+You can only cancel an order that is in one of the following states: `pending` or `authorised`
+* `RefundOrder(string order_id,RefundOrderReq request)` -  Issue a refund for a completed order. This operation allows for either a full or partial refund, which will be processed back to the customer's original payment method.
+
+### [CustomersApiClient](https://developer.revolut.com/docs/merchant/customers)
+* `CreateCustomer(CreateCustomerRequest request)` -  Create a `customer` that has the information in the body of the request. 
+* `RetrieveCustomers()` -  Get a list of all your `customers`
+* `RetrieveCustomer(string customer_id)` -  Get the information about a specific `customer`, based on its ID.
+* `UpdateCustomer(string customer_id, UpdateCustomerRequest request)` -  Update the attributes of a specific customer.
+* `DeleteCustomer(string customer_id)` - Delete the profile of a specific customer.
+* `GetPaymentMethods(string customer_id)` - Retrieve all the payment methods for a specific customer.
+This can be useful in the following example cases:
+    - To show what information is stored for the customer.
+     - To try a different payment method if the first payment method fails when a recurring transaction occurs.
+* `GetPaymentMethod(string customer_id, string payment_method_id)` - Retrieve the information of a specific payment method that is saved.
+* `UpdatePaymentMethod(string customer_id, string payment_method_id, UpdatePaymentMethod request)` - When you use this request to update a customer's payment method, the payment method can't be used for merchant initiated transactions (MIT) any more. This payment method can be used only when the customer is on the checkout page.
+* `DeletePaymentMethod(string customer_id, string payment_method_id)` - Delete a specific payment method. The payment method is completely deleted from the customer payment methods.
+To reuse the payment method that is deleted, direct your customer to the checkout page and save the card details again.
+
+### [MerchantPaymentsApiClient](https://developer.revolut.com/docs/merchant/payments)
+* `ConfirmOrder(string order_id, PayForAnOrderReq request)` -  Initiate a payment to pay full amount for an order using a customer's saved payment method.
+* `RetrievePaymentListOfAnOrder(string order_id)` -  Retrieve a list of payments for a specific order, based on the order's ID.
+* `RetrievePaymentDetails(string payment_id)` -  Retrieve information about a specific payment, based on the payment's ID.
+
+### [PayoutsApiClient](https://developer.revolut.com/docs/merchant/payouts)
+* `GetPayouts(GetPayoutReq request)` -  Retrieve all the payouts you made from your Merchant account. You can also use the query parameters for  `from_created_date` , `to_created_date`, `currency`, `state` and `limit`
+* `GetPayout(string payout_id)` -  Retrieve the details of a payout. Provide the unique payout ID, and the corresponding payout information is returned.
+
+### [LocationsApiClient](https://developer.revolut.com/docs/merchant/locations)
+* `CreateLocation(CreateLocationReq request)` -  Create a Location object.
+* `GetLocations(CreateLocationReq request)` -  Retrieve a list of locations registered for the merchant.
+* `GetLocation(string location_id)` - Retrieve details of a specific location, based on its ID.
+* `UpdateLocation(string location_id, UpdateLocationReq request)` - Update details of a specific location, based on its ID.
+* `DeleteLocation(string location_id,)` - Delete a specific location, based on its ID.
+
+### [WebhookApiClient](https://developer.revolut.com/docs/merchant/webhooks)
+* `CreateWebhook(CreateWebhookReq request)` -  Set up a webhook URL so that the Merchant API can push event notifications to the specified URL.
+* `GetWebhooks()` -  Get a list of webhooks that you are currently subscribed to.
+* `GetWebhooks(string webhook_id)` -  Get the details of a specific webhook.
+* `UpdateWebhook(string webhook_id,UpdateWebhookReq request)` -  Update the details of a specific webhook.
+* `DeleteWebhook(string webhook_id)` - Delete a webhook so that events are not sent to the specified URL any more.
+* `RotateWebhookSigningSecret(string webhook_id,RotateWebhookSigningSecretReq request)` - Rotate the signing secret for a specific webhook.
+
+
 
 # Running API client tests
 In order to run tests you need to modify the `Config.cs` file in the RevolutApiTests project.

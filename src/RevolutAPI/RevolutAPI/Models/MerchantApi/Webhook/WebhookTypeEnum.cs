@@ -10,6 +10,9 @@ namespace RevolutAPI.Models.MerchantApi.Webhook
         ORDER_AUTHORISED, 
         ORDER_PAYMENT_AUTHENTICATED, 
         ORDER_PAYMENT_DECLINED, 
-        ORDER_PAYMENT_FAILED
+        ORDER_PAYMENT_FAILED,
+        PAYOUT_INITIATED, 
+        PAYOUT_COMPLETED, 
+        PAYOUT_FAILED
     }
 }
