@@ -1,5 +1,4 @@
 
-[![stable](https://img.shields.io/nuget/v/RevolutAPI.svg?label=stable)](https://www.nuget.org/packages/RevolutAPI//)
 
 # API documentation
 https://developer.revolut.com/docs/merchant/merchant-api
@@ -9,6 +8,73 @@ https://developer.revolut.com/docs/business/business-api
 # Supported API-s
 * Business API 
 * Merchant API
+
+# Breaking changes
+### 1. Request Models Constructor Added
+
+- Previously, request models were initialized using object initializers, e.g.,
+  ```csharp
+  CreateOrderReq orderRequest = new CreateOrderReq
+            {
+                Amount = 10,
+                Currency = "EUR"
+            };
+   ```         
+            
+- Now, all request models require explicit constructor initialization. For example:
+    ```csharp
+  CreateOrderReq orderRequest = new CreateOrderReq(amount:10,currency:"EUR")
+           
+   ```  
+Each constructor includes required parameters, which enforces stricter model validation during object creation
+
+### 2. Separation of API Methods into Specific Clients
+
+Several methods have been moved to distinct API client classes for better modularity and adherence to single-responsibility principles.
+
+- **PaymentApiClient**:
+  - Previously, all payment-related methods (e.g., `CreateTransfer`, `CreatePayment`, `CreatePayment`,`GetTransactions`...) were housed in this class.
+
+#### Example:
+```csharp
+// Before:
+var paymentApi = new PaymentApiClient();
+paymentApi.GetTransactions(...);
+paymentApi.SchedulePayment(...);
+
+
+// Now:
+var transactionApi = new TransactionApiClient();
+transactionApi.GetTransactions(...);
+
+var paymentDraftsApi = new PpaymentDraftsApiClient();
+transactionApi.CreatePaymentDraft(...);
+```
+ 
+For details about the methods available in each client, refer to the client-specific documentation below.
+
+
+### 3. Changes in OrderApiClient (MerchantApi)
+
+The request and response parameters for the `OrderApiClient` methods have been updated to align with the current Revolut API version (2024-09-01). This update includes revisions for better clarity, extensibility, and additional metadata in the response format. Be sure to review the updated method signatures and response handling logic when working with the `OrderApiClient`.
+
+## Migration Guide
+
+To update your existing codebase to comply with these changes:
+
+### 1. Update Request Model Initialization:
+- Refactor all model initializations to use constructors instead of object initializers.
+- Review the required parameters for each model constructor.
+
+### 2. Adapt to New API Client Structure:
+- Replace calls to methods previously in `PaymentApiClient` with the respective client class (e.g., `TransferApiClient`, `TransactionApiClient`).
+- Instantiate and use the appropriate client class for each specific operation.
+
+### 3. Update OrderApiClient Usage:
+- Review the updated request parameter structure and revise method calls accordingly.
+- Adjust response parsing logic to accommodate new response formats.
+
+
 
 # Notes
 For merchant API you only need a merchant API key and API version

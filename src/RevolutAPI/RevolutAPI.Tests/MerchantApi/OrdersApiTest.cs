@@ -46,7 +46,7 @@ namespace RevolutAPI.Tests.MerchantApi
                 { "keytest1", "valuetest1" },
                 { "keytest2", "valuetest2" }
             };
-            
+
             CreateOrderReq request = new CreateOrderReq(amount:10,
                 currency:"GBP",
                 description:"Krneki123",
