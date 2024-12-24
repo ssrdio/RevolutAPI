@@ -47,7 +47,7 @@ paymentApi.SchedulePayment(...);
 var transactionApi = new TransactionApiClient();
 transactionApi.GetTransactions(...);
 
-var paymentDraftsApi = new PpaymentDraftsApiClient();
+var paymentDraftsApi = new PaymentDraftsApiClient();
 transactionApi.CreatePaymentDraft(...);
 ```
  
