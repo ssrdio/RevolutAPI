@@ -25,7 +25,6 @@ https://developer.revolut.com/docs/business/business-api
 - Now, all request models require explicit constructor initialization. For example:
     ```csharp
   CreateOrderReq orderRequest = new CreateOrderReq(amount:10,currency:"EUR")
-           
    ```  
 Each constructor includes required parameters, which enforces stricter model validation during object creation
 
