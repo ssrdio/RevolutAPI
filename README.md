@@ -16,10 +16,10 @@ https://developer.revolut.com/docs/business/business-api
 - Previously, request models were initialized using object initializers, e.g.,
   ```csharp
   CreateOrderReq orderRequest = new CreateOrderReq
-            {
-                Amount = 10,
-                Currency = "EUR"
-            };
+  {
+    Amount = 10,
+    Currency = "EUR"
+  };
    ```         
             
 - Now, all request models require explicit constructor initialization. For example:
