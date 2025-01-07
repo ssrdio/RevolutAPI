@@ -10,7 +10,7 @@ https://developer.revolut.com/docs/business/business-api
 * Merchant API
 
 # Migrating to 4+
-# Breaking changes 
+## Breaking changes 
 ### 1. Request Models Constructor Added
 
 - Previously, request models were initialized using object initializers, e.g.,
