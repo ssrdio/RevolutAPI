@@ -11,5 +11,7 @@ namespace RevolutAPI.Models.Shared
         public string Type { get; set; }
         [JsonProperty("amount")]
         public Amount Amount { get; set; }
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
     }
 }

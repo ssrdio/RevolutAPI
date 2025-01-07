@@ -19,14 +19,14 @@ namespace RevolutAPI.OutCalls.MerchantApi
 
         public async Task<Result<CreateCustomerResponse>> CreateCustomer(CreateCustomerRequest req)
         {
-            string endpoint = "/customers";
+            string endpoint = "/api/1.0/customers";
             Result<CreateCustomerResponse> result = await _apiClient.Post<CreateCustomerResponse>(endpoint, req);
             return result;
         }
 
         public async Task<List<RetrieveCustomersResponse>> RetrieveCustomers()
         {
-            string endpoint = "/customers";
+            string endpoint = "/api/1.0/customers";
             List<RetrieveCustomersResponse> result = await _apiClient.Get<List<RetrieveCustomersResponse>>(endpoint);
             return result;
         }
@@ -38,7 +38,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/customers/{id}";
+            string endpoint = $"/api/1.0/customers/{id}";
             CustomerDetailsResponse result = await _apiClient.Get<CustomerDetailsResponse>(endpoint);
             return result;
         }
@@ -50,7 +50,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/customers/{id}";
+            string endpoint = $"/api/1.0/customers/{id}";
             bool result = await _apiClient.Delete(endpoint);
             return result;
         }
@@ -62,7 +62,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/customers/{id}";
+            string endpoint = $"/api/1.0/customers/{id}";
             RetrieveCustomersResponse result = await _apiClient.Patch<RetrieveCustomersResponse>(endpoint, request);
             return result;
         }
@@ -74,7 +74,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/customers/{customerId}/payment-methods";
+            string endpoint = $"/api/1.0/customers/{customerId}/payment-methods";
             List<PaymentMethodsResponse> result = await _apiClient.Get<List<PaymentMethodsResponse>>(endpoint);
             return result;
         }
@@ -91,7 +91,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/customers/{customerId}/payment-methods/{paymentMethodId}";
+            string endpoint = $"/api/1.0/customers/{customerId}/payment-methods/{paymentMethodId}";
             PaymentMethodsResponse result = await _apiClient.Get<PaymentMethodsResponse>(endpoint);
             return result;
         }
@@ -108,7 +108,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/customers/{customerId}/payment-methods/{paymentMethodId}";
+            string endpoint = $"/api/1.0/customers/{customerId}/payment-methods/{paymentMethodId}";
             PaymentMethodsResponse result = await _apiClient.Patch<PaymentMethodsResponse>(endpoint, request);
             return result;
         }
@@ -125,7 +125,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/customers/{customerId}/payment-methods/{paymentMethodId}";
+            string endpoint = $"/api/1.0/customers/{customerId}/payment-methods/{paymentMethodId}";
             bool result = await _apiClient.Delete(endpoint);
             return result;
         }

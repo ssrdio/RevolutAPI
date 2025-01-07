@@ -9,5 +9,9 @@ namespace RevolutAPI.Models.MerchantApi.Customers
     {
         [JsonProperty("saved_for")]
         public string SavedFor { get; set; }
+        public UpdatePaymentMethod(string savedFor)
+        {
+            SavedFor = savedFor;
+        }
     }
 }

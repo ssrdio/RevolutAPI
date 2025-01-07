@@ -10,22 +10,24 @@ namespace RevolutAPI.Tests.MerchantApi
     public class WebhookApiTests
     {
         private WebhookApiClient _webhookApiClient;
+        private static readonly string WEBHOOK_URL = "";
 
         public WebhookApiTests()
         {
             _webhookApiClient = new WebhookApiClient(
-                new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTENDPOINT));
+                new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTAPIVERSION, Config.MERCHANTENDPOINT));
         }
 
         [Fact]
         public async void TestCreateWebhook_Success()
         {
-            Result<CreateWebhookResp> webhook = await _webhookApiClient.CreateWebhook(new CreateWebhookReq
-            {
-                Url = "https://test-revolut-1.ssrd.io",
-                Events = new List<WebhookTypeEnum> { WebhookTypeEnum.ORDER_COMPLETED },
-            });
+            CreateWebhookReq request = new CreateWebhookReq
+            (
+                url: WEBHOOK_URL,
+                events: new List<WebhookTypeEnum> { WebhookTypeEnum.ORDER_COMPLETED, WebhookTypeEnum.ORDER_PAYMENT_AUTHENTICATED }
+            );
 
+            Result<CreateWebhookResp> webhook = await _webhookApiClient.CreateWebhook(request);
             Assert.True(webhook.Success);
 
             await _webhookApiClient.DeleteWebhook(webhook.Value.Id);
@@ -34,12 +36,13 @@ namespace RevolutAPI.Tests.MerchantApi
         [Fact]
         public async void TestGetWebhook_Success()
         {
-            string url = "https://test-revolut-2.ssrd.io";
-            Result<CreateWebhookResp> webhook = await _webhookApiClient.CreateWebhook(new CreateWebhookReq
-            {
-                Url = url,
-                Events = new List<WebhookTypeEnum> { WebhookTypeEnum.ORDER_COMPLETED },
-            });
+            string url = WEBHOOK_URL;
+            CreateWebhookReq request = new CreateWebhookReq
+            (
+                url: url,
+                events: new List<WebhookTypeEnum> { WebhookTypeEnum.ORDER_COMPLETED }
+            );
+            Result<CreateWebhookResp> webhook = await _webhookApiClient.CreateWebhook(request);
 
             WebhookDetailsResp response = await _webhookApiClient.GetWebhook(webhook.Value.Id);
 
@@ -60,16 +63,17 @@ namespace RevolutAPI.Tests.MerchantApi
         [Fact]
         public async void TestUpdateWebhook_Success()
         {
-            string urlOld = "https://test-revolut-3.ssrd.io";
-            var webhook = await _webhookApiClient.CreateWebhook(new CreateWebhookReq
-            {
-                Url = urlOld,
-                Events = new List<WebhookTypeEnum> { WebhookTypeEnum.ORDER_COMPLETED },
-            });
+            string urlOld = WEBHOOK_URL;
+            CreateWebhookReq request = new CreateWebhookReq
+            (
+                url: urlOld,
+                events: new List<WebhookTypeEnum> { WebhookTypeEnum.ORDER_COMPLETED }
+            );
+            var webhook = await _webhookApiClient.CreateWebhook(request);
 
             WebhookDetailsResp webhookDetails = await _webhookApiClient.GetWebhook(webhook.Value.Id);
 
-            string url = "https://test-revolut-4.ssrd.io";
+            string url = WEBHOOK_URL;
             WebhooksResp webhookUpdate = await _webhookApiClient.UpdateWebhook(webhook.Value.Id, new UpdateWebhookReq
             {
                 Url = url,
@@ -87,12 +91,13 @@ namespace RevolutAPI.Tests.MerchantApi
         [Fact]
         public async void TestDeleteWebhook_Success()
         {
-            string url = "https://test-revolut-5.ssrd.io";
-            var webhook = await _webhookApiClient.CreateWebhook(new CreateWebhookReq
-            {
-                Url = url,
-                Events = new List<WebhookTypeEnum> { WebhookTypeEnum.ORDER_COMPLETED },
-            });
+            string url = WEBHOOK_URL;
+            CreateWebhookReq request = new CreateWebhookReq
+            (
+                url: url,
+                events: new List<WebhookTypeEnum> { WebhookTypeEnum.ORDER_COMPLETED }
+            );
+            var webhook = await _webhookApiClient.CreateWebhook(request);
 
             bool isDeleted = await _webhookApiClient.DeleteWebhook(webhook.Value.Id);
 

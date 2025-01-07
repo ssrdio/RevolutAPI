@@ -13,15 +13,13 @@ namespace RevolutAPI.Tests.MerchantApi
     public class CustomerApiTests
     {
         private CustomersApiClient _customerApiClient;
-        private OrderApiClient _orderApiClient;
-        private MerchantPaymentsApiClient _merchantPaymentsApiClient;
+        private static readonly string CUSTOMER_ID = "";
+
 
         public CustomerApiTests()
         {
-            _customerApiClient = new CustomersApiClient(new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTENDPOINT));
-            _orderApiClient = new OrderApiClient(new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTENDPOINT));
-            _merchantPaymentsApiClient = new MerchantPaymentsApiClient(new RevolutSimpleClient(Config.MERCHANTAPIKEY, "https://sandbox-merchant.revolut.com/api"));
-        }
+            _customerApiClient = new CustomersApiClient(new RevolutSimpleClient(Config.MERCHANTAPIKEY, Config.MERCHANTAPIVERSION, Config.MERCHANTENDPOINT));
+        } 
 
         [Fact]
         public async void CustomerFlow_Success()
@@ -67,6 +65,20 @@ namespace RevolutAPI.Tests.MerchantApi
             CustomerDetailsResponse retrievedCustomer = await _customerApiClient.RetrieveCustomer("123");
 
             Assert.Null(retrievedCustomer);
+        }
+
+        [Fact]
+        public async void RetrieveCustomerList()
+        {
+            List<RetrieveCustomersResponse> customers = await _customerApiClient.RetrieveCustomers();
+            Assert.NotNull(customers);
+        }
+
+        [Fact]
+        public async void RetrieveCustomerPaymentMethods()
+        {
+            List<PaymentMethodsResponse> customerPaymentMethods = await _customerApiClient.GetPaymentMethods(CUSTOMER_ID);
+            Assert.NotNull(customerPaymentMethods);
         }
     }
 }

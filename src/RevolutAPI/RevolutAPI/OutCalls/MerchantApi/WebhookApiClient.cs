@@ -17,14 +17,14 @@ namespace RevolutAPI.OutCalls.MerchantApi
 
         public async Task<Result<CreateWebhookResp>> CreateWebhook(CreateWebhookReq request)
         {
-            string endpoint = "/webhooks";
+            string endpoint = "/api/1.0/webhooks";
             Result<CreateWebhookResp> result = await _apiClient.Post<CreateWebhookResp>(endpoint, request);
             return result;
         }
 
         public async Task<List<WebhooksResp>> GetWebhooks()
         {
-            string endpoint = "/webhooks";
+            string endpoint = "/api/1.0/webhooks";
             List<WebhooksResp> result = await _apiClient.Get<List<WebhooksResp>>(endpoint);
             return result;
         }
@@ -36,7 +36,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/webhooks/{webhookId}";
+            string endpoint = $"/api/1.0/webhooks/{webhookId}";
             WebhookDetailsResp result = await _apiClient.Get<WebhookDetailsResp>(endpoint);
             return result;
         }
@@ -48,7 +48,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/webhooks/{webhookId}";
+            string endpoint = $"/api/1.0/webhooks/{webhookId}";
             WebhooksResp result = await _apiClient.Put<WebhooksResp>(endpoint, request);
             return result;
         }
@@ -60,7 +60,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/webhooks/{webhookId}";
+            string endpoint = $"/api/1.0/webhooks/{webhookId}";
             bool result = await _apiClient.Delete(endpoint);
             return result;
         }
@@ -73,7 +73,7 @@ namespace RevolutAPI.OutCalls.MerchantApi
                 throw new ArgumentException();
             }
 
-            string endpoint = $"/webhooks/{webhookId}/rotate-signing-secret";
+            string endpoint = $"/api/1.0/webhooks/{webhookId}/rotate-signing-secret";
             Result<WebhookDetailsResp> result = await _apiClient.Post<WebhookDetailsResp>(endpoint, request);
             return result;
         }

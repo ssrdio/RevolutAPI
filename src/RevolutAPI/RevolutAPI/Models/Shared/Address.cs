@@ -17,7 +17,17 @@ namespace RevolutAPI.Models.Shared
         public string City { get; set; }
         [JsonProperty("country_code")]
         public string CountryCode { get; set; }
-        [JsonProperty("post_code")]
+        [JsonProperty("postcode")]
         public string Postcode { get; set; }
+        public Address(string streetLine1, string city, string countryCode,string postCode,string streetLine2 = null,string region = null)
+        {
+            StreetLine1 = streetLine1;
+            StreetLine2 = streetLine2;
+            City = city;
+            CountryCode = countryCode;
+            Postcode = postCode;
+            Region = region;
+        }
+
     }
 }

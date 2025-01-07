@@ -35,7 +35,7 @@ namespace RevolutAPI.OutCalls
                 sub = clientId
             }, data, certificatePassword);
        
-            Result<AuthorizationCodeResp> auth = await _apiClient.PostFormData<AuthorizationCodeResp>("/auth/token", new List<KeyValuePair<string, string>> {
+            Result<AuthorizationCodeResp> auth = await _apiClient.PostFormData<AuthorizationCodeResp>("/1.0/auth/token", new List<KeyValuePair<string, string>> {
                 new KeyValuePair<string, string>( "grant_type", "authorization_code" ),
                 new KeyValuePair<string, string>( "code", authCode ),
                 new KeyValuePair<string, string>( "client_id", clientId),
@@ -64,7 +64,7 @@ namespace RevolutAPI.OutCalls
                 sub = clientId
             }, data, certificatePassword);
 
-            Result<RefreshAccessTokenResp> auth = await _apiClient.PostFormData<RefreshAccessTokenResp>("/auth/token", new List<KeyValuePair<string, string>> {
+            Result<RefreshAccessTokenResp> auth = await _apiClient.PostFormData<RefreshAccessTokenResp>("/1.0/auth/token", new List<KeyValuePair<string, string>> {
                 new KeyValuePair<string, string>( "grant_type", "refresh_token" ),
                 new KeyValuePair<string, string>( "refresh_token", refreshToken ),
                 new KeyValuePair<string, string>( "client_id", clientId),
