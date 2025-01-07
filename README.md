@@ -1,4 +1,5 @@
 
+![stable](https://img.shields.io/nuget/v/RevolutAPI.svg?label=stable)](https://www.nuget.org/packages/RevolutAPI/)
 
 # API documentation
 https://developer.revolut.com/docs/merchant/merchant-api
