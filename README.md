@@ -6,6 +6,8 @@ https://developer.revolut.com/docs/merchant/merchant-api
 
 https://developer.revolut.com/docs/business/business-api
 
+API version: `2024-09-01`
+
 # Supported API-s
 * Business API 
 * Merchant API
