@@ -9,6 +9,7 @@ using RevolutAPI.Models.MerchantApi.Orders;
 using RevolutAPI.Models.MerchantApi.Orders.Objects;
 using RevolutAPI.Models.MerchantApi.Payments;
 using RevolutAPI.Models.MerchantApi.Payments.Objects;
+using RevolutAPI.Models.Shared;
 using RevolutAPI.Models.Shared.Enums;
 using RevolutAPI.OutCalls;
 using RevolutAPI.OutCalls.MerchantApi;
@@ -35,9 +36,9 @@ namespace RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment
             IOptions<RevolutSettings> revolutSettings)
         {
             _revolutSettings = revolutSettings.Value;
-            _customersApiClient = new CustomersApiClient(new RevolutSimpleClient(_revolutSettings.MerchantKey, _revolutSettings.MerchantUrl));
-            _orderApiClient = new OrderApiClient(new RevolutSimpleClient(_revolutSettings.MerchantKey, _revolutSettings.MerchantUrl));
-            _merchantPaymentsApiClient = new MerchantPaymentsApiClient(new RevolutSimpleClient(_revolutSettings.MerchantKey, _revolutSettings.MerchantNewUrl));
+            _customersApiClient = new CustomersApiClient(new RevolutSimpleClient(_revolutSettings.MerchantKey, "2024-09-01", _revolutSettings.MerchantUrl));
+            _orderApiClient = new OrderApiClient(new RevolutSimpleClient(_revolutSettings.MerchantKey, "2024-09-01", _revolutSettings.MerchantUrl));
+            _merchantPaymentsApiClient = new MerchantPaymentsApiClient(new RevolutSimpleClient(_revolutSettings.MerchantKey, "2024-09-01", _revolutSettings.MerchantNewUrl));
 
             _customerDAO = customersDAO;
             _customersPaymentMethodsDAO = customersPaymentMethodsDAO;
@@ -55,7 +56,6 @@ namespace RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment
                 Phone = request.Phone
             };
             
-
             Result<CreateCustomerResponse> createNewCustomer = await _customersApiClient.CreateCustomer(newCustomer);
             if (createNewCustomer.Failure)
             {
@@ -70,13 +70,20 @@ namespace RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment
                 Email = newCustomer.Email,
                 Phone = newCustomer.Phone
             };
-            Customer cust = new Customer(fullname: newCustomer.FullName, id: createNewCustomer.Value.Id, email: newCustomer.Email, phone: newCustomer.Phone);
+
+            Customer cust = new Customer(
+                fullname: newCustomer.FullName, 
+                id: createNewCustomer.Value.Id,
+                email: newCustomer.Email, 
+                phone: newCustomer.Phone);
 
             bool customerAdded = await _customerDAO.Add(customer);
             if(!customerAdded)
             {
                 return Result.Fail<string>("Can't add customer to db");
             }
+
+
             CreateOrderReq firstOrder = new CreateOrderReq(amount: request.Amount, currency: "EUR", customer: cust, description: request.Description);
            
 
@@ -115,8 +122,17 @@ namespace RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment
                     return Result.Fail<string>("Can't add customer to db");
                 }
             }
-            Customer cust = new Customer(fullname: dbCustomer.FullName, id: dbCustomer.Id, email: dbCustomer.Email, phone: dbCustomer.Phone);
-            CreateOrderReq firstOrder = new CreateOrderReq(amount: amount, currency: "EUR", customer: cust, captureMode:"automatic");
+            Customer cust = new Customer(
+                fullname: dbCustomer.FullName,
+                id: dbCustomer.Id,
+                email: dbCustomer.Email,
+                phone: dbCustomer.Phone);
+
+            CreateOrderReq firstOrder = new CreateOrderReq(
+                amount: amount,
+                currency: "EUR",
+                customer: cust,
+                captureMode: "automatic");
            
 
             Result<CreateOrderResp> createFirstOrder = await _orderApiClient.CreateOrder(firstOrder);
@@ -131,11 +147,26 @@ namespace RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment
         public async Task<Result<PayForAnOrderResp>> CreateOrderAndPay(string customerId, double amount, string? paymentMethodId)
         {
             CustomerEntity? dbCustomer = await _customerDAO.Get(customerId);
-            Customer cust = new Customer(fullname: dbCustomer.FullName, id: dbCustomer.Id, email: dbCustomer.Email, phone: dbCustomer.Phone);
-            CreateOrderReq createOrder = new CreateOrderReq(amount: amount, currency: "EUR", customer: cust);
+
+            Customer cust = new Customer(
+                fullname: dbCustomer.FullName,
+                id: dbCustomer.Id,
+                email: dbCustomer.Email,
+                phone: dbCustomer.Phone);
+
+            CreateOrderReq createOrder = new CreateOrderReq(
+                amount: amount,
+                currency: "EUR",
+                customer: cust);
            
             List<CustomersPaymentMethodsEntity> savedMethods = await _customersPaymentMethodsDAO.Get(customerId);
-            CustomersPaymentMethodsEntity? temp = (paymentMethodId == null) ? savedMethods.First() : savedMethods.Where(x => x.PaymentMethodId == paymentMethodId).SingleOrDefault();
+
+            CustomersPaymentMethodsEntity? temp = (paymentMethodId == null) 
+                ? savedMethods.First() 
+                : savedMethods
+                    .Where(x => x.PaymentMethodId == paymentMethodId)
+                    .SingleOrDefault();
+
             if (temp == null)
             {
                 return Result.Fail<PayForAnOrderResp>("Can't get saved methods");
@@ -146,10 +177,26 @@ namespace RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment
             {
                 return Result.Fail<PayForAnOrderResp>("Can't send order");
             }
-            SavedPaymentMethod savedPaymentMethod = new SavedPaymentMethod(id: temp.PaymentMethodId, type: temp.Type.ToLower(), initiator: temp.SavedFor.ToLower());
-            PayForAnOrderReq confirmOrder = new PayForAnOrderReq(savedPaymentMethod: savedPaymentMethod);
-           
+            SavedPaymentMethod savedPaymentMethod = new SavedPaymentMethod(
+                id: temp.PaymentMethodId,
+                type: temp.Type.ToLower(),
+                initiator: temp.SavedFor.ToLower());
 
+            PayForAnOrderReq confirmOrder = new PayForAnOrderReq(
+                savedPaymentMethod: savedPaymentMethod);
+
+            confirmOrder.SavedPaymentMethod.Environment = new RevolutAPI.Models.MerchantApi.Payments.Objects.Enviroment
+            (
+                type: "browser",
+                timezone: 180,
+                colorDepth: 48,
+                screenWidth: 1920,
+                screenHeight: 1080,
+                javaEnabled: true,
+                challengeWindowWidth: 640,
+                url: "https://business.revolut.com"
+            );
+            
             Result<PayForAnOrderResp> chargePayment = await _merchantPaymentsApiClient.ConfirmOrder(sendOrder.Value.Id, confirmOrder);
             if (chargePayment.Failure)
             {
@@ -177,6 +224,29 @@ namespace RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment
         }
 
 
+        public async Task<Result> Create(string name, string email, string phone)
+        {
+            Customer customer = new Customer(
+              fullname: name,
+              email: email,
+              phone: phone);
+
+            CreateOrderReq addPaymnetOrder = new CreateOrderReq(
+                amount: 0.0,
+                currency: "EUR",
+                customer: customer,
+                description: "request.Description");
+
+            RevolutAPI.Helpers.Result<CreateOrderResp> createOrderResult = await _orderApiClient.CreateOrder(addPaymnetOrder);
+            if (createOrderResult.Failure)
+            {
+                
+                return Result.Fail(createOrderResult.Error);
+            }
+
+            return Result.Ok();
+        }
+
         public async Task<bool> ChargeAllCustomers(double amount)
         {
             List<CustomerEntity> customers = await _customerDAO.GetAllIncluded();
@@ -200,10 +270,14 @@ namespace RevolutAPI.AutomaticCardPayment.Features.AutomaticPayment
                 {
                     return false;
                 }
-                SavedPaymentMethod savedPaymentMethod = new SavedPaymentMethod(id: paymentMethod.PaymentMethodId, type: paymentMethod.Type.ToLower(), initiator: paymentMethod.SavedFor.ToLower());
-                PayForAnOrderReq confirmOrder = new PayForAnOrderReq(savedPaymentMethod:savedPaymentMethod);
-                
+                SavedPaymentMethod savedPaymentMethod = new SavedPaymentMethod(
+                    id: paymentMethod.PaymentMethodId,
+                    type: paymentMethod.Type.ToLower(),
+                    initiator: paymentMethod.SavedFor.ToLower());
 
+                PayForAnOrderReq confirmOrder = new PayForAnOrderReq(
+                    savedPaymentMethod:savedPaymentMethod);
+                
                 if (paymentMethod.Type.ToLower() != "merchant")
                 {
                     confirmOrder.SavedPaymentMethod.Environment = new RevolutAPI.Models.MerchantApi.Payments.Objects.Enviroment

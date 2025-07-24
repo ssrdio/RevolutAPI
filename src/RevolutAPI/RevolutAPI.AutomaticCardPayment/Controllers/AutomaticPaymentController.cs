@@ -64,19 +64,5 @@ namespace RevolutAPI.AutomaticCardPayment.Controllers
 
             return Ok(result.Value);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> ChargeAllCustomers([FromQuery] double amount)
-        {
-            bool result = await _automaticPaymentService.ChargeAllCustomers(amount);
-            if (!result)
-            {
-                return BadRequest();
-            }
-
-            return Ok();
-        }
-
-
     }
 }
