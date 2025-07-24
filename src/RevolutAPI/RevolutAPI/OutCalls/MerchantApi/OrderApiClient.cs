@@ -7,9 +7,9 @@ namespace RevolutAPI.OutCalls.MerchantApi
 {
     public class OrderApiClient
     {
-        private readonly RevolutSimpleClient _apiClient;
+        private readonly IRevolutApiClient _apiClient;
 
-        public OrderApiClient(RevolutSimpleClient client)
+        public OrderApiClient(IRevolutApiClient client)
         {
             _apiClient = client;
         }

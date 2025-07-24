@@ -22,7 +22,7 @@ namespace RevolutAPI.OutCalls
         private JsonSerializerSettings _jsonSerializerSettings;
       
 
-        public RevolutSimpleClient(string token, string version, string endpoint = "https://merchant.revolut.com/api/1.0")
+        public RevolutSimpleClient(string token, string version, string endpoint = "https://merchant.revolut.com")
         {
             _endpoint = endpoint;
             _httpClient = new HttpClient();

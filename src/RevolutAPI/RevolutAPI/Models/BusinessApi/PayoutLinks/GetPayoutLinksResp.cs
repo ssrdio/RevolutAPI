@@ -2,9 +2,6 @@
 using RevolutAPI.Models.Shared.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RevolutAPI.Models.BusinessApi.PayoutLinks
 {
@@ -46,6 +43,5 @@ namespace RevolutAPI.Models.BusinessApi.PayoutLinks
         public string TransactionId { get; set; }
         [JsonProperty("cancellation_reason")]
         public string CancellationReason { get; set; }
-
     }
 }
