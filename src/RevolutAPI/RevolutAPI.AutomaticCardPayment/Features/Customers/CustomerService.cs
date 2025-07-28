@@ -25,7 +25,7 @@ namespace RevolutAPI.AutomaticCardPayment.Features.Customers
         {
             _revolutSettings = revolutSettings.Value;
             _customerDAO = customerDAO;
-            _customersApiClient = new CustomersApiClient(new RevolutSimpleClient(_revolutSettings.MerchantKey, _revolutSettings.MerchantUrl));
+            _customersApiClient = new CustomersApiClient(new RevolutSimpleClient(_revolutSettings.MerchantKey, "2024-09-01", _revolutSettings.MerchantUrl));
             _customersPaymentMethodsDAO = customersPaymentMethodsDAO;
         }
 

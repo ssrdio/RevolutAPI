@@ -8,9 +8,9 @@ namespace RevolutAPI.OutCalls.MerchantApi
 {
     public class WebhookApiClient
     {
-        private readonly RevolutSimpleClient _apiClient;
+        private readonly IRevolutApiClient _apiClient;
 
-        public WebhookApiClient(RevolutSimpleClient apiClient)
+        public WebhookApiClient(IRevolutApiClient apiClient)
         {
             _apiClient = apiClient;
         }

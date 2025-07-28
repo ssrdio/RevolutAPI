@@ -11,8 +11,8 @@ namespace RevolutAPI.OutCalls.MerchantApi
 {
     public class LocationsApiClient
     {
-        private readonly RevolutSimpleClient _apiClient;
-        public LocationsApiClient(RevolutSimpleClient apiClient)
+        private readonly IRevolutApiClient _apiClient;
+        public LocationsApiClient(IRevolutApiClient apiClient)
         {
             _apiClient = apiClient;
         }

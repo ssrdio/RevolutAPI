@@ -10,9 +10,9 @@ namespace RevolutAPI.OutCalls.MerchantApi
 {
     public class CustomersApiClient
     {
-        private readonly RevolutSimpleClient _apiClient;
+        private readonly IRevolutApiClient _apiClient;
 
-        public CustomersApiClient(RevolutSimpleClient apiClient)
+        public CustomersApiClient(IRevolutApiClient apiClient)
         {
             _apiClient = apiClient;
         }

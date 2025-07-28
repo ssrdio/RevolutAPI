@@ -27,6 +27,8 @@ namespace RevolutAPI.Models.BusinessApi.Transactions
         public DateTime UpdatedAt { get; set; }
         [JsonProperty("scheduled_for")]
         public DateTime ScheduledFor { get; set; }
+        [JsonProperty("completed_at")]
+        public DateTime CompletedAt { get; set; }
         [JsonProperty("related_transaction_id")]
         public string RelatedTransactionId { get; set; }
         [JsonProperty("merchant")]
@@ -37,9 +39,5 @@ namespace RevolutAPI.Models.BusinessApi.Transactions
         public List<TransactionLeg> Legs { get; set; }
         [JsonProperty("card")]
         public TransactionCard Card { get; set; }
-
-
     }
-
-    
 }
