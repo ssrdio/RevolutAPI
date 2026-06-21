@@ -26,9 +26,8 @@ namespace RevolutAPI.Models.BusinessApi.Counterparties
         [JsonProperty("updated_at")]
         public DateTime UpdatedAt { get; set; }
         [JsonProperty("accounts")]
-        public List<CounterpartyAddress> Accounts { get; set; }
-
-        [JsonProperty("Cards")]
+        public List<CounterpartyAccount> Accounts { get; set; }
+        [JsonProperty("cards")]
         public List<CounterpartyCard> Cards { get; set; }
     }
 }
