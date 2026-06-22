@@ -17,7 +17,12 @@ API version: `2024-09-01`
 
 # Migrating to 4+
 ## Breaking changes 
-### 1. Request Models Constructor Added
+### 1. API Endpoint URL has changed
+
+- Previously, API Endpoint URL contained version number, e.g. `https://b2b.revolut.com/api/1.0`.
+- Now, API Endpoint URL MUST NOT contain version number, e.g. `https://b2b.revolut.com/api`.
+
+### 2. Request Models Constructor Added
 
 - Previously, request models were initialized using object initializers, e.g.,
   ```csharp
@@ -34,7 +39,7 @@ API version: `2024-09-01`
    ```  
 Each constructor includes required parameters, which enforces stricter model validation during object creation
 
-### 2. Separation of API Methods into Specific Clients
+### 3. Separation of API Methods into Specific Clients
 
 Several methods have been moved to distinct API client classes for better modularity and adherence to single-responsibility principles.
 
@@ -60,7 +65,7 @@ transactionApi.CreatePaymentDraft(...);
 For details about the methods available in each client, refer to the client-specific documentation below.
 
 
-### 3. Changes in OrderApiClient (MerchantApi)
+### 4. Changes in OrderApiClient (MerchantApi)
 
 The request and response parameters for the `OrderApiClient` methods have been updated to align with the current Revolut API version (2024-09-01). This update includes revisions for better clarity, extensibility, and additional metadata in the response format. Be sure to review the updated method signatures and response handling logic when working with the `OrderApiClient`.
 
@@ -68,15 +73,17 @@ The request and response parameters for the `OrderApiClient` methods have been u
 
 To update your existing codebase to comply with these changes:
 
-### 1. Update Request Model Initialization:
+### 1. Remove version number from API Endpoint URL.
+
+### 2. Update Request Model Initialization:
 - Refactor all model initializations to use constructors instead of object initializers.
 - Review the required parameters for each model constructor.
 
-### 2. Adapt to New API Client Structure:
+### 3. Adapt to New API Client Structure:
 - Replace calls to methods previously in `PaymentApiClient` with the respective client class (e.g., `TransferApiClient`, `TransactionApiClient`).
 - Instantiate and use the appropriate client class for each specific operation.
 
-### 3. Update OrderApiClient Usage:
+### 4. Update OrderApiClient Usage:
 - Review the updated request parameter structure and revise method calls accordingly.
 - Adjust response parsing logic to accommodate new response formats.
 
